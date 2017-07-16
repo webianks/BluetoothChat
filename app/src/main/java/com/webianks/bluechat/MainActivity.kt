@@ -13,8 +13,6 @@ import android.widget.TextView
 import android.content.BroadcastReceiver
 
 
-
-
 class MainActivity : AppCompatActivity() {
 
     private val REQUEST_ENABLE_BT: Int = 123
@@ -53,6 +51,9 @@ class MainActivity : AppCompatActivity() {
         val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
         registerReceiver(mReceiver, filter)
 
+        val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300)
+        startActivity(discoverableIntent)
     }
 
     // Create a BroadcastReceiver for ACTION_FOUND.
