@@ -12,6 +12,7 @@ import android.util.Log
 import android.widget.TextView
 import android.content.BroadcastReceiver
 import android.graphics.Typeface
+import android.support.v7.app.ActionBar
 import android.support.v7.widget.Toolbar
 
 
@@ -28,7 +29,10 @@ class MainActivity : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        label = findViewById(R.id.label)
+        val actionbar: ActionBar? = supportActionBar
+        if (actionbar != null)
+            actionbar.setTitle(getString(R.string.nothing))
+
         val toolbarTitle = findViewById<TextView>(R.id.toolbarTitle)
 
         val typeFace = Typeface.createFromAsset(assets,"fonts/product_sans.ttf")
@@ -82,8 +86,11 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_OK)
-            label.setText("Bluetooth is now enabled.")
+        if(requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_OK){
+            //Bluetooth is now coonnected.
+
+        }
+            //label.setText("Bluetooth is now enabled.")
     }
 
 
