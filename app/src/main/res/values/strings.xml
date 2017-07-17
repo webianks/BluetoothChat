@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BlueChat</string>
+    <string name="nothing"> </string>
 </resources>

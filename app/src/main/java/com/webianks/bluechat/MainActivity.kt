@@ -11,6 +11,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import android.content.BroadcastReceiver
+import android.graphics.Typeface
+import android.support.v7.widget.Toolbar
 
 
 class MainActivity : AppCompatActivity() {
@@ -23,14 +25,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
         label = findViewById(R.id.label)
+        val toolbarTitle = findViewById<TextView>(R.id.toolbarTitle)
+
+        val typeFace = Typeface.createFromAsset(assets,"fonts/product_sans.ttf")
+        toolbarTitle.typeface = typeFace
 
         val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         if(mBluetoothAdapter == null){
           //This device doesn't support bluetooth
         }
 
-        if (!mBluetoothAdapter.isEnabled()) {
+        if (!mBluetoothAdapter.isEnabled) {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
         }
@@ -68,7 +77,7 @@ class MainActivity : AppCompatActivity() {
                 val deviceHardwareAddress = device.address // MAC address
             }
         }
-    };
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
