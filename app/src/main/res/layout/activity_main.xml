@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,9 +8,7 @@
 
 
     <android.support.design.widget.AppBarLayout
-        android:layout_width="0dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
@@ -24,9 +22,8 @@
                 android:id="@+id/toolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
                 android:text="@string/app_name"
+                android:layout_gravity="center_horizontal"
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="@dimen/titleTextSize"
                 android:textStyle="bold"
@@ -37,4 +34,19 @@
     </android.support.design.widget.AppBarLayout>
 
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/search_devices"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/buttonHeight"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:layout_margin="32dp"
+        android:text="@string/search_devices"
+        android:background="@drawable/selectable_background"
+        android:textColor="@color/colorSecondaryText"
+        />
+
+
+</RelativeLayout>
