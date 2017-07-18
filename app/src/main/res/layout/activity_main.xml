@@ -8,7 +8,9 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/progressBar">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -31,12 +33,19 @@
 
     </android.support.design.widget.AppBarLayout>
 
+
+    <include layout="@layout/recyclerview_single_item"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_centerInParent="true"
+        />
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/search_devices"
