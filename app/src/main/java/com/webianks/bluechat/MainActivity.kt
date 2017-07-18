@@ -12,15 +12,19 @@ import android.util.Log
 import android.widget.TextView
 import android.content.BroadcastReceiver
 import android.graphics.Typeface
+import android.opengl.Visibility
 import android.support.v7.app.ActionBar
 import android.support.v7.widget.Toolbar
-
+import android.view.View
+import android.widget.Button
+import android.widget.ProgressBar
 
 class MainActivity : AppCompatActivity() {
 
     private val REQUEST_ENABLE_BT: Int = 123
     private lateinit var label: TextView
     private val TAG: String = javaClass.simpleName
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,9 +42,19 @@ class MainActivity : AppCompatActivity() {
         val typeFace = Typeface.createFromAsset(assets,"fonts/product_sans.ttf")
         toolbarTitle.typeface = typeFace
 
+        progressBar = findViewById(R.id.progressBar)
+        findViewById<Button>(R.id.search_devices).setOnClickListener{
+            findDevices()
+        }
+    }
+
+    private fun findDevices() {
+
+        progressBar.visibility = View.VISIBLE
+
         val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         if(mBluetoothAdapter == null){
-          //This device doesn't support bluetooth
+            //This device doesn't support bluetooth
         }
 
         if (!mBluetoothAdapter.isEnabled) {
@@ -85,6 +99,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+        progressBar.visibility = View.INVISIBLE
 
         if(requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_OK){
             //Bluetooth is now coonnected.
