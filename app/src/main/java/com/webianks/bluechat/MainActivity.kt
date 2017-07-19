@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private val mList = arrayListOf<String>()
     private lateinit var devicesAdapter: DevicesRecyclerViewAdapter
+    private var  mBtAdapter: BluetoothAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +38,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         val actionbar: ActionBar? = supportActionBar
-        if (actionbar != null)
-            actionbar.title = getString(R.string.nothing)
+        actionbar?.title = getString(R.string.nothing)
 
         val toolbarTitle = findViewById<TextView>(R.id.toolbarTitle)
 
@@ -59,27 +59,26 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = devicesAdapter
 
         // Register for broadcasts when a device is discovered.
-        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+        var filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
         registerReceiver(mReceiver, filter)
-    }
 
-    private fun findDevices() {
+        // Register for broadcasts when discovery has finished
+        filter = IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
+        this.registerReceiver(mReceiver, filter)
 
-        progressBar.visibility = View.VISIBLE
+        // Get the local Bluetooth adapter
+        mBtAdapter = BluetoothAdapter.getDefaultAdapter()
 
-        val mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        if(mBluetoothAdapter == null){
-            //This device doesn't support bluetooth
-        }
-
-        if (!mBluetoothAdapter.isEnabled) {
+        if (!mBtAdapter?.isEnabled!!) {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
         }
 
-        val pairedDevices = mBluetoothAdapter.bondedDevices
+        // Get a set of currently paired devices
+        val pairedDevices = mBtAdapter?.bondedDevices
 
-        if (pairedDevices.size > 0) {
+        // If there are paired devices, add each one to the ArrayAdapter
+        if (pairedDevices?.size!! > 0) {
             // There are paired devices. Get the name and address of each paired device.
             for (device in pairedDevices) {
                 val deviceName = device.name
@@ -88,6 +87,20 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun findDevices() {
+
+        progressBar.visibility = View.VISIBLE
+
+        // If we're already discovering, stop it
+        if (mBtAdapter?.isDiscovering!!) {
+            mBtAdapter!!.cancelDiscovery()
+        }
+
+        // Request discover from BluetoothAdapter
+        mBtAdapter!!.startDiscovery()
+
        /* val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300)
         startActivity(discoverableIntent)*/
@@ -95,10 +108,10 @@ class MainActivity : AppCompatActivity() {
 
     // Create a BroadcastReceiver for ACTION_FOUND.
     private val mReceiver = object: BroadcastReceiver() {
+
         override fun onReceive(context : Context,intent : Intent) {
 
             val action = intent.action
-            Log.d("webi","onReceive")
 
             if (BluetoothDevice.ACTION_FOUND == action) {
                 // Discovery has found a device. Get the BluetoothDevice
