@@ -22,8 +22,8 @@ import android.widget.ProgressBar
 
 class MainActivity : AppCompatActivity() {
 
-    private val REQUEST_ENABLE_BT: Int = 123
-    private val TAG: String = javaClass.simpleName
+    private val REQUEST_ENABLE_BT = 123
+    private val TAG = javaClass.simpleName
     private lateinit var progressBar: ProgressBar
     private lateinit var recyclerView: RecyclerView
     private val mList = arrayListOf<String>()
@@ -96,7 +96,10 @@ class MainActivity : AppCompatActivity() {
     // Create a BroadcastReceiver for ACTION_FOUND.
     private val mReceiver = object: BroadcastReceiver() {
         override fun onReceive(context : Context,intent : Intent) {
+
             val action = intent.action
+            Log.d("webi","onReceive")
+
             if (BluetoothDevice.ACTION_FOUND == action) {
                 // Discovery has found a device. Get the BluetoothDevice
                 // object and its info from the Intent.
@@ -125,7 +128,6 @@ class MainActivity : AppCompatActivity() {
         }
             //label.setText("Bluetooth is now enabled.")
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
