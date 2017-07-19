@@ -12,8 +12,9 @@ import android.util.Log
 import android.widget.TextView
 import android.content.BroadcastReceiver
 import android.graphics.Typeface
-import android.opengl.Visibility
 import android.support.v7.app.ActionBar
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.Button
@@ -22,9 +23,11 @@ import android.widget.ProgressBar
 class MainActivity : AppCompatActivity() {
 
     private val REQUEST_ENABLE_BT: Int = 123
-    private lateinit var label: TextView
     private val TAG: String = javaClass.simpleName
     private lateinit var progressBar: ProgressBar
+    private lateinit var recyclerView: RecyclerView
+    private val mList = arrayListOf<String>()
+    private lateinit var devicesAdapter: DevicesRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         val actionbar: ActionBar? = supportActionBar
         if (actionbar != null)
-            actionbar.setTitle(getString(R.string.nothing))
+            actionbar.title = getString(R.string.nothing)
 
         val toolbarTitle = findViewById<TextView>(R.id.toolbarTitle)
 
@@ -43,9 +46,21 @@ class MainActivity : AppCompatActivity() {
         toolbarTitle.typeface = typeFace
 
         progressBar = findViewById(R.id.progressBar)
+        recyclerView = findViewById(R.id.recyclerView)
+
+        val llm = LinearLayoutManager(this)
+        recyclerView.layoutManager = llm
+
         findViewById<Button>(R.id.search_devices).setOnClickListener{
             findDevices()
         }
+
+        devicesAdapter = DevicesRecyclerViewAdapter(context = this,mList = mList)
+        recyclerView.adapter = devicesAdapter
+
+        // Register for broadcasts when a device is discovered.
+        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+        registerReceiver(mReceiver, filter)
     }
 
     private fun findDevices() {
@@ -69,18 +84,13 @@ class MainActivity : AppCompatActivity() {
             for (device in pairedDevices) {
                 val deviceName = device.name
                 val deviceHardwareAddress = device.address // MAC address
-
                 Log.d(TAG,"deviceName: $deviceName :: deviceHardwareAddress: $deviceHardwareAddress")
             }
         }
 
-        // Register for broadcasts when a device is discovered.
-        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
-        registerReceiver(mReceiver, filter)
-
-        val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
+       /* val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300)
-        startActivity(discoverableIntent)
+        startActivity(discoverableIntent)*/
     }
 
     // Create a BroadcastReceiver for ACTION_FOUND.
@@ -93,6 +103,13 @@ class MainActivity : AppCompatActivity() {
                 val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
                 val deviceName = device.name
                 val deviceHardwareAddress = device.address // MAC address
+
+                Log.d(TAG,"Found this device ==>>> $device with address ==>> $deviceHardwareAddress")
+
+                mList.add(deviceName)
+
+                devicesAdapter.notifyDataSetChanged()
+
             }
         }
     }
@@ -103,7 +120,7 @@ class MainActivity : AppCompatActivity() {
         progressBar.visibility = View.INVISIBLE
 
         if(requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_OK){
-            //Bluetooth is now coonnected.
+            //Bluetooth is now connected.
 
         }
             //label.setText("Bluetooth is now enabled.")

@@ -20,6 +20,7 @@ class DevicesRecyclerViewAdapter(val mList: List<String>, val context: Context) 
     }
 
     override fun onBindViewHolder(holder: VH?, position: Int) {
+        holder?.label?.text = mList[position]
     }
 
     override fun getItemCount(): Int {
@@ -27,8 +28,6 @@ class DevicesRecyclerViewAdapter(val mList: List<String>, val context: Context) 
     }
 
     class VH(itemView: View?) : RecyclerView.ViewHolder(itemView){
-
-    val label = itemView?.findViewById<TextView>(R.id.largeLabel)
-}
-
+        val label = itemView?.findViewById<TextView>(R.id.largeLabel)
+     }
 }
