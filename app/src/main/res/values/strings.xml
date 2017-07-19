@@ -3,5 +3,5 @@
     <string name="nothing"> </string>
     <string name="search_devices">Search Devices</string>
     <string name="not_compatible">Not compatible</string>
-    <string name="no_support">Your phone does not support Bluetooth.</string>
+    <string name="no_support">This phone does not support Bluetooth.</string>
 </resources>

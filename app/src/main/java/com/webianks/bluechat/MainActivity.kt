@@ -1,7 +1,6 @@
 package com.webianks.bluechat
 
 import android.Manifest
-import android.annotation.TargetApi
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -13,7 +12,6 @@ import android.widget.TextView
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.os.Build
-import android.support.annotation.NonNull
 import android.support.v7.app.ActionBar
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -55,10 +53,10 @@ class MainActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
         recyclerView = findViewById(R.id.recyclerView)
 
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null)
             alreadyAskedForPermission = savedInstanceState.getBoolean(PERMISSION_REQUEST_LOCATION_KEY, false)
-            checkPermissions()
-        }
+
+        checkPermissions()
 
         val llm = LinearLayoutManager(this)
         recyclerView.layoutManager = llm
@@ -115,6 +113,7 @@ class MainActivity : AppCompatActivity() {
             // Android M Permission check 
             if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) !=
                     PackageManager.PERMISSION_GRANTED) {
+
                 val builder = AlertDialog.Builder(this)
                 builder.setTitle("This app needs location access")
                 builder.setMessage("Please grant location access so this app can detect bluetooth devices.")
@@ -127,8 +126,8 @@ class MainActivity : AppCompatActivity() {
                             Manifest.permission.ACCESS_FINE_LOCATION
                     ), PERMISSION_REQUEST_LOCATION)
                 }
-
                 builder.show()
+
             } else {
                 //this.showBluetoothChatFragment()
             }
@@ -178,14 +177,12 @@ class MainActivity : AppCompatActivity() {
                 val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
                 val deviceName = device.name
                 val deviceHardwareAddress = device.address // MAC address
-
-                Log.d(TAG, "Found this device ==>>> $device with address ==>> $deviceHardwareAddress")
-
                 mList.add(deviceName)
-
                 devicesAdapter.notifyDataSetChanged()
-
             }
+
+            if(BluetoothAdapter.ACTION_DISCOVERY_FINISHED == action)
+                progressBar.visibility = View.INVISIBLE
         }
     }
 
