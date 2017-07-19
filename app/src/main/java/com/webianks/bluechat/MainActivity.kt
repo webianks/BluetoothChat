@@ -1,17 +1,19 @@
 package com.webianks.bluechat
 
+import android.Manifest
+import android.annotation.TargetApi
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
-import android.content.BroadcastReceiver
+import android.content.pm.PackageManager
 import android.graphics.Typeface
+import android.os.Build
+import android.support.annotation.NonNull
 import android.support.v7.app.ActionBar
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -22,7 +24,6 @@ import android.widget.ProgressBar
 import android.support.v7.app.AlertDialog
 
 
-
 class MainActivity : AppCompatActivity() {
 
     private val REQUEST_ENABLE_BT = 123
@@ -31,7 +32,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private val mList = arrayListOf<String>()
     private lateinit var devicesAdapter: DevicesRecyclerViewAdapter
-    private var  mBtAdapter: BluetoothAdapter? = null
+    private var mBtAdapter: BluetoothAdapter? = null
+    private val PERMISSION_REQUEST_LOCATION = 123
+    private val PERMISSION_REQUEST_LOCATION_KEY = "PERMISSION_REQUEST_LOCATION"
+    private var alreadyAskedForPermission = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,20 +49,25 @@ class MainActivity : AppCompatActivity() {
 
         val toolbarTitle = findViewById<TextView>(R.id.toolbarTitle)
 
-        val typeFace = Typeface.createFromAsset(assets,"fonts/product_sans.ttf")
+        val typeFace = Typeface.createFromAsset(assets, "fonts/product_sans.ttf")
         toolbarTitle.typeface = typeFace
 
         progressBar = findViewById(R.id.progressBar)
         recyclerView = findViewById(R.id.recyclerView)
 
+        if (savedInstanceState != null) {
+            alreadyAskedForPermission = savedInstanceState.getBoolean(PERMISSION_REQUEST_LOCATION_KEY, false)
+            checkPermissions()
+        }
+
         val llm = LinearLayoutManager(this)
         recyclerView.layoutManager = llm
 
-        findViewById<Button>(R.id.search_devices).setOnClickListener{
+        findViewById<Button>(R.id.search_devices).setOnClickListener {
             findDevices()
         }
 
-        devicesAdapter = DevicesRecyclerViewAdapter(context = this,mList = mList)
+        devicesAdapter = DevicesRecyclerViewAdapter(context = this, mList = mList)
         recyclerView.adapter = devicesAdapter
 
         // Register for broadcasts when a device is discovered.
@@ -89,8 +98,43 @@ class MainActivity : AppCompatActivity() {
             for (device in pairedDevices) {
                 val deviceName = device.name
                 val deviceHardwareAddress = device.address // MAC address
-                Log.d(TAG,"deviceName: $deviceName :: deviceHardwareAddress: $deviceHardwareAddress")
+                Log.d(TAG, "deviceName: $deviceName :: deviceHardwareAddress: $deviceHardwareAddress")
             }
+        }
+
+    }
+
+    private fun checkPermissions() {
+
+        if (alreadyAskedForPermission) {
+            // don't check again because the dialog is still open
+            return
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Android M Permission check 
+            if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("This app needs location access")
+                builder.setMessage("Please grant location access so this app can detect bluetooth devices.")
+                builder.setPositiveButton(android.R.string.ok, null)
+                builder.setOnDismissListener {
+                    // the dialog will be opened so we have to save that
+                    alreadyAskedForPermission = true
+                    requestPermissions(arrayOf(
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                    ), PERMISSION_REQUEST_LOCATION)
+                }
+
+                builder.show()
+            } else {
+                //this.showBluetoothChatFragment()
+            }
+        } else {
+            //this.showBluetoothChatFragment()
+            alreadyAskedForPermission = true
         }
 
     }
@@ -116,15 +160,15 @@ class MainActivity : AppCompatActivity() {
         // Request discover from BluetoothAdapter
         mBtAdapter!!.startDiscovery()
 
-       /* val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
-        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300)
-        startActivity(discoverableIntent)*/
+        /* val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
+         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300)
+         startActivity(discoverableIntent)*/
     }
 
     // Create a BroadcastReceiver for ACTION_FOUND.
-    private val mReceiver = object: BroadcastReceiver() {
+    private val mReceiver = object : BroadcastReceiver() {
 
-        override fun onReceive(context : Context,intent : Intent) {
+        override fun onReceive(context: Context, intent: Intent) {
 
             val action = intent.action
 
@@ -135,7 +179,7 @@ class MainActivity : AppCompatActivity() {
                 val deviceName = device.name
                 val deviceHardwareAddress = device.address // MAC address
 
-                Log.d(TAG,"Found this device ==>>> $device with address ==>> $deviceHardwareAddress")
+                Log.d(TAG, "Found this device ==>>> $device with address ==>> $deviceHardwareAddress")
 
                 mList.add(deviceName)
 
@@ -150,11 +194,41 @@ class MainActivity : AppCompatActivity() {
 
         progressBar.visibility = View.INVISIBLE
 
-        if(requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_OK){
+        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_OK) {
             //Bluetooth is now connected.
 
         }
-            //label.setText("Bluetooth is now enabled.")
+        //label.setText("Bluetooth is now enabled.")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(PERMISSION_REQUEST_LOCATION_KEY, alreadyAskedForPermission)
+    }
+
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        when (requestCode) {
+
+            PERMISSION_REQUEST_LOCATION -> {
+                // the request returned a result so the dialog is closed
+                alreadyAskedForPermission = false
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                        grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG, "Coarse and fine location permissions granted")
+                    //this.showBluetoothChatFragment()
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        val builder = AlertDialog.Builder(this)
+                        builder.setTitle("Functionality limited")
+                        builder.setMessage("Since location access has not been granted, this app will not be able to work correctly.")
+                        builder.setPositiveButton(android.R.string.ok, null)
+                        builder.show()
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroy() {
