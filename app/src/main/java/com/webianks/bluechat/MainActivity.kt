@@ -19,6 +19,9 @@ import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
+import android.support.v7.app.AlertDialog
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -69,6 +72,9 @@ class MainActivity : AppCompatActivity() {
         // Get the local Bluetooth adapter
         mBtAdapter = BluetoothAdapter.getDefaultAdapter()
 
+        if (mBtAdapter == null)
+            showAlertAndExit()
+
         if (!mBtAdapter?.isEnabled!!) {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
@@ -87,6 +93,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun showAlertAndExit() {
+
+        AlertDialog.Builder(this)
+                .setTitle(getString(R.string.not_compatible))
+                .setMessage(getString(R.string.no_support))
+                .setPositiveButton("Exit", { _, _ -> System.exit(0) })
+                .show()
     }
 
     private fun findDevices() {
