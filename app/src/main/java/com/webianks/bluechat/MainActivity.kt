@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
     private val TAG = javaClass.simpleName
     private lateinit var progressBar: ProgressBar
     private lateinit var recyclerView: RecyclerView
-    private val mList = arrayListOf<String>()
+    private val mDeviceList = arrayListOf<DeviceData>()
     private lateinit var devicesAdapter: DevicesRecyclerViewAdapter
     private var mBtAdapter: BluetoothAdapter? = null
     private val PERMISSION_REQUEST_LOCATION = 123
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
             findDevices()
         }
 
-        devicesAdapter = DevicesRecyclerViewAdapter(context = this, mList = mList)
+        devicesAdapter = DevicesRecyclerViewAdapter(context = this, mDeviceList = mDeviceList)
         recyclerView.adapter = devicesAdapter
         devicesAdapter.setItemClickListener(this)
 
@@ -185,10 +185,8 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
                 val deviceName = device.name
                 val deviceHardwareAddress = device.address // MAC address
 
-                if (deviceName!=null && deviceName.isNotEmpty())
-                    mList.add(deviceName)
-                else
-                    mList.add(deviceHardwareAddress)
+                val deviceData = DeviceData(deviceName,deviceHardwareAddress)
+                mDeviceList.add(deviceData)
 
                 devicesAdapter.notifyDataSetChanged()
             }
@@ -226,7 +224,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
                 alreadyAskedForPermission = false
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED &&
                         grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(TAG, "Coarse and fine location permissions granted")
+                    //Log.d(TAG, "Coarse and fine location permissions granted")
                     startDiscovery()
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

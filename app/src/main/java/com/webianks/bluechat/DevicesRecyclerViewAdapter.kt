@@ -11,7 +11,7 @@ import android.widget.TextView
  * Created by R Ankit on 18-07-2017.
  */
 
-class DevicesRecyclerViewAdapter(val mList: List<String>, val context: Context) :
+class DevicesRecyclerViewAdapter(val mDeviceList: List<DeviceData>, val context: Context) :
         RecyclerView.Adapter<DevicesRecyclerViewAdapter.VH>() {
 
 
@@ -23,11 +23,11 @@ class DevicesRecyclerViewAdapter(val mList: List<String>, val context: Context) 
     }
 
     override fun onBindViewHolder(holder: VH?, position: Int) {
-        holder?.label?.text = mList[position]
+        holder?.label?.text = mDeviceList[position].deviceName ?: mDeviceList[position].deviceHardwareAddress
     }
 
     override fun getItemCount(): Int {
-        return mList.size
+        return mDeviceList.size
     }
 
     inner class VH(itemView: View?) : RecyclerView.ViewHolder(itemView){
