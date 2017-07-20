@@ -34,6 +34,8 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
     private lateinit var headerLabel: TextView
     private lateinit var headerLabelContainer: LinearLayout
 
+    private val mChatService: BluetoothChatService? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -239,8 +241,26 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
         }
     }
 
-    override fun itemClicked() {
-        Toast.makeText(this,"Item Clicked",Toast.LENGTH_SHORT).show()
+    override fun itemClicked(deviceData: DeviceData) {
+         connectDevice(deviceData)
+    }
+
+    private fun connectDevice(deviceData: DeviceData) {
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Performing this check in onResume() covers the case in which BT was
+        // not enabled during onStart(), so we were paused to enable it...
+        // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
+        if (mChatService != null) {
+            // Only if the state is STATE_NONE, do we know that we haven't started already
+            if (mChatService.getState() == BluetoothChatService.STATE_NONE) {
+                // Start the Bluetooth chat services
+                mChatService.start()
+            }
+        }
     }
 
     override fun onDestroy() {

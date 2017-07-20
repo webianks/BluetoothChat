@@ -36,7 +36,7 @@ class DevicesRecyclerViewAdapter(val mDeviceList: List<DeviceData>, val context:
 
         init {
             label?.setOnClickListener{
-                listener?.itemClicked()
+                listener?.itemClicked(mDeviceList[adapterPosition])
             }
         }
     }
@@ -46,6 +46,6 @@ class DevicesRecyclerViewAdapter(val mDeviceList: List<DeviceData>, val context:
     }
 
     interface ItemClickListener{
-        fun itemClicked()
+        fun itemClicked(deviceData: DeviceData)
     }
 }
