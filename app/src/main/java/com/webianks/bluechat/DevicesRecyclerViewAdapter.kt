@@ -14,6 +14,9 @@ import android.widget.TextView
 class DevicesRecyclerViewAdapter(val mList: List<String>, val context: Context) :
         RecyclerView.Adapter<DevicesRecyclerViewAdapter.VH>() {
 
+
+    private var listener: ItemClickListener? = null
+
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): VH? {
         val view = LayoutInflater.from(context).inflate(R.layout.recyclerview_single_item, parent, false)
         return VH(view)
@@ -27,7 +30,22 @@ class DevicesRecyclerViewAdapter(val mList: List<String>, val context: Context) 
         return mList.size
     }
 
-    class VH(itemView: View?) : RecyclerView.ViewHolder(itemView){
-        val label = itemView?.findViewById<TextView>(R.id.largeLabel)
-     }
+    inner class VH(itemView: View?) : RecyclerView.ViewHolder(itemView){
+
+        var label: TextView? = itemView?.findViewById(R.id.largeLabel)
+
+        init {
+            label?.setOnClickListener{
+                listener?.itemClicked()
+            }
+        }
+    }
+
+    fun setItemClickListener(listener: ItemClickListener){
+        this.listener = listener
+    }
+
+    interface ItemClickListener{
+        fun itemClicked()
+    }
 }

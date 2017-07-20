@@ -8,7 +8,6 @@ import android.content.*
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.os.Build
@@ -17,12 +16,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.View
-import android.widget.Button
-import android.widget.ProgressBar
 import android.support.v7.app.AlertDialog
-import android.widget.LinearLayout
+import android.widget.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickListener {
 
     private val REQUEST_ENABLE_BT = 123
     private val TAG = javaClass.simpleName
@@ -71,6 +68,7 @@ class MainActivity : AppCompatActivity() {
 
         devicesAdapter = DevicesRecyclerViewAdapter(context = this, mList = mList)
         recyclerView.adapter = devicesAdapter
+        devicesAdapter.setItemClickListener(this)
 
         // Register for broadcasts when a device is discovered.
         var filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
@@ -187,7 +185,7 @@ class MainActivity : AppCompatActivity() {
                 val deviceName = device.name
                 val deviceHardwareAddress = device.address // MAC address
 
-                if (deviceName.isNotEmpty())
+                if (deviceName!=null && deviceName.isNotEmpty())
                     mList.add(deviceName)
                 else
                     mList.add(deviceHardwareAddress)
@@ -241,6 +239,10 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun itemClicked() {
+        Toast.makeText(this,"Item Clicked",Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {
