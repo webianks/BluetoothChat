@@ -21,7 +21,6 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.support.v7.app.AlertDialog
 
-
 class MainActivity : AppCompatActivity() {
 
     private val REQUEST_ENABLE_BT = 123
@@ -55,8 +54,6 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState != null)
             alreadyAskedForPermission = savedInstanceState.getBoolean(PERMISSION_REQUEST_LOCATION_KEY, false)
-
-        checkPermissions()
 
         val llm = LinearLayoutManager(this)
         recyclerView.layoutManager = llm
@@ -99,7 +96,6 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG, "deviceName: $deviceName :: deviceHardwareAddress: $deviceHardwareAddress")
             }
         }
-
     }
 
     private fun checkPermissions() {
@@ -129,10 +125,10 @@ class MainActivity : AppCompatActivity() {
                 builder.show()
 
             } else {
-                //this.showBluetoothChatFragment()
+                startDiscovery()
             }
         } else {
-            //this.showBluetoothChatFragment()
+            startDiscovery()
             alreadyAskedForPermission = true
         }
 
@@ -149,19 +145,23 @@ class MainActivity : AppCompatActivity() {
 
     private fun findDevices() {
 
-        progressBar.visibility = View.VISIBLE
-
-        // If we're already discovering, stop it
-        if (mBtAdapter?.isDiscovering!!) {
-            mBtAdapter!!.cancelDiscovery()
-        }
-
-        // Request discover from BluetoothAdapter
-        mBtAdapter!!.startDiscovery()
+        checkPermissions()
 
         /* val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
          discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300)
          startActivity(discoverableIntent)*/
+    }
+
+    private fun startDiscovery(){
+
+        progressBar.visibility = View.VISIBLE
+
+        // If we're already discovering, stop it
+        if (mBtAdapter?.isDiscovering!!)
+            mBtAdapter!!.cancelDiscovery()
+
+        // Request discover from BluetoothAdapter
+        mBtAdapter!!.startDiscovery()
     }
 
     // Create a BroadcastReceiver for ACTION_FOUND.
@@ -214,7 +214,7 @@ class MainActivity : AppCompatActivity() {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED &&
                         grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                     Log.d(TAG, "Coarse and fine location permissions granted")
-                    //this.showBluetoothChatFragment()
+                    startDiscovery()
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         val builder = AlertDialog.Builder(this)
