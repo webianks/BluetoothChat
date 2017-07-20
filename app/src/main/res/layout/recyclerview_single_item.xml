@@ -12,8 +12,7 @@
         android:padding="16dp"
         android:layout_marginStart="@dimen/large_32_margin"
         android:text="@string/app_name"
-        android:textColor="@color/colorPrimaryText"
-        android:textStyle="italic" />
+        android:textColor="@color/colorPrimaryText"/>
 
     <View
         android:layout_width="match_parent"

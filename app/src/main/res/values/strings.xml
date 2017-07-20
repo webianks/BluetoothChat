@@ -4,4 +4,11 @@
     <string name="search_devices">Search Devices</string>
     <string name="not_compatible">Not compatible</string>
     <string name="no_support">This phone does not support Bluetooth.</string>
+    <string name="fun_limted">Functionality limited</string>
+    <string name="since_perm_not_granted">Since location access has not been granted, this app will not be able to work correctly.</string>
+    <string name="need_loc_access">This app needs location access</string>
+    <string name="please_grant_loc_access">Please grant location access so this app can detect bluetooth devices.</string>
+    <string name="connecting">Connecting..</string>
+    <string name="searching">Searching..</string>
+    <string name="found">Found devices</string>
 </resources>

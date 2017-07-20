@@ -8,6 +8,7 @@
     tools:context="com.webianks.bluechat.MainActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -32,19 +33,40 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <LinearLayout
+        android:id="@+id/headerLabelContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        />
+        android:layout_below="@id/appBar"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:id="@+id/headerLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/searching"
+            android:textStyle="bold|italic"
+            />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone" />
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:visibility="gone"
+            android:layout_gravity="center_vertical"
+            />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_below="@id/headerLabelContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/search_devices"
@@ -56,7 +78,7 @@
         android:background="@drawable/selectable_background"
         android:text="@string/search_devices"
         android:textAllCaps="false"
-        android:textColor="@color/colorSecondaryText"
+        android:textColor="@color/colorAccent"
         android:textStyle="bold" />
 
 </RelativeLayout>

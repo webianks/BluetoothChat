@@ -20,6 +20,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.support.v7.app.AlertDialog
+import android.widget.LinearLayout
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +34,8 @@ class MainActivity : AppCompatActivity() {
     private val PERMISSION_REQUEST_LOCATION = 123
     private val PERMISSION_REQUEST_LOCATION_KEY = "PERMISSION_REQUEST_LOCATION"
     private var alreadyAskedForPermission = false
+    private lateinit var headerLabel: TextView
+    private lateinit var headerLabelContainer: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +54,10 @@ class MainActivity : AppCompatActivity() {
 
         progressBar = findViewById(R.id.progressBar)
         recyclerView = findViewById(R.id.recyclerView)
+        headerLabel = findViewById(R.id.headerLabel)
+        headerLabelContainer = findViewById(R.id.headerLabelContainer)
+
+        headerLabelContainer.visibility = View.INVISIBLE
 
         if (savedInstanceState != null)
             alreadyAskedForPermission = savedInstanceState.getBoolean(PERMISSION_REQUEST_LOCATION_KEY, false)
@@ -111,8 +118,8 @@ class MainActivity : AppCompatActivity() {
                     PackageManager.PERMISSION_GRANTED) {
 
                 val builder = AlertDialog.Builder(this)
-                builder.setTitle("This app needs location access")
-                builder.setMessage("Please grant location access so this app can detect bluetooth devices.")
+                builder.setTitle(getString(R.string.need_loc_access))
+                builder.setMessage(getString(R.string.please_grant_loc_access))
                 builder.setPositiveButton(android.R.string.ok, null)
                 builder.setOnDismissListener {
                     // the dialog will be opened so we have to save that
@@ -154,7 +161,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun startDiscovery(){
 
+        headerLabelContainer.visibility = View.VISIBLE
         progressBar.visibility = View.VISIBLE
+        headerLabel.text = getString(R.string.searching)
 
         // If we're already discovering, stop it
         if (mBtAdapter?.isDiscovering!!)
@@ -177,12 +186,19 @@ class MainActivity : AppCompatActivity() {
                 val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
                 val deviceName = device.name
                 val deviceHardwareAddress = device.address // MAC address
-                mList.add(deviceName)
+
+                if (deviceName.isNotEmpty())
+                    mList.add(deviceName)
+                else
+                    mList.add(deviceHardwareAddress)
+
                 devicesAdapter.notifyDataSetChanged()
             }
 
-            if(BluetoothAdapter.ACTION_DISCOVERY_FINISHED == action)
+            if(BluetoothAdapter.ACTION_DISCOVERY_FINISHED == action) {
                 progressBar.visibility = View.INVISIBLE
+                headerLabel.text = getString(R.string.found)
+            }
         }
     }
 
@@ -203,7 +219,6 @@ class MainActivity : AppCompatActivity() {
         outState.putBoolean(PERMISSION_REQUEST_LOCATION_KEY, alreadyAskedForPermission)
     }
 
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
                                             grantResults: IntArray) {
         when (requestCode) {
@@ -218,8 +233,8 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         val builder = AlertDialog.Builder(this)
-                        builder.setTitle("Functionality limited")
-                        builder.setMessage("Since location access has not been granted, this app will not be able to work correctly.")
+                        builder.setTitle(getString(R.string.fun_limted))
+                        builder.setMessage(getString(R.string.since_perm_not_granted))
                         builder.setPositiveButton(android.R.string.ok, null)
                         builder.show()
                     }
