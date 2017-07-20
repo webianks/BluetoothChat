@@ -12,6 +12,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import android.os.Bundle
+import java.util.*
 
 /**
  * Created by ramankit on 20/7/17.
@@ -28,6 +29,15 @@ class BluetoothChatService(context: Context, handler: Handler){
     private var mConnectedThread: ConnectedThread? = null
     private var mState: Int = 0
     private var mNewState: Int = 0
+
+    // Unique UUID for this application
+    private val MY_UUID_SECURE = UUID.fromString("will-add-this-later")
+    private val MY_UUID_INSECURE = UUID.fromString("will-add-this-later")
+
+
+    // Name for the SDP record when creating server socket
+    private val NAME_SECURE = "BluetoothChatSecure"
+    private val NAME_INSECURE = "BluetoothChatInsecure"
 
     // Constants that indicate the current connection state
     companion object {
@@ -60,24 +70,24 @@ class BluetoothChatService(context: Context, handler: Handler){
 
         // Cancel any thread attempting to make a connection
         if (mConnectThread != null) {
-            mConnectThread.cancel()
+            mConnectThread!!.cancel()
             mConnectThread = null
         }
 
         // Cancel any thread currently running a connection
         if (mConnectedThread != null) {
-            mConnectedThread.cancel()
+            mConnectedThread!!.cancel()
             mConnectedThread = null
         }
 
         // Start the thread to listen on a BluetoothServerSocket
         if (mSecureAcceptThread == null) {
             mSecureAcceptThread = AcceptThread(true)
-            mSecureAcceptThread.start()
+            mSecureAcceptThread!!.start()
         }
         if (mInsecureAcceptThread == null) {
             mInsecureAcceptThread = AcceptThread(false)
-            mInsecureAcceptThread.start()
+            mInsecureAcceptThread!!.start()
         }
         // Update UI title
         //updateUserInterfaceTitle()
@@ -97,22 +107,23 @@ class BluetoothChatService(context: Context, handler: Handler){
         // Cancel any thread attempting to make a connection
         if (mState === STATE_CONNECTING) {
             if (mConnectThread != null) {
-                mConnectThread.cancel()
+                mConnectThread!!.cancel()
                 mConnectThread = null
             }
         }
 
         // Cancel any thread currently running a connection
         if (mConnectedThread != null) {
-            mConnectedThread.cancel()
+            mConnectedThread!!.cancel()
             mConnectedThread = null
         }
 
         // Start the thread to connect with the given device
         mConnectThread = ConnectThread(device, secure)
-        mConnectThread.start()
+        mConnectThread!!.start()
+
         // Update UI title
-        updateUserInterfaceTitle()
+        //updateUserInterfaceTitle()
     }
 
 
@@ -128,29 +139,29 @@ class BluetoothChatService(context: Context, handler: Handler){
 
         // Cancel the thread that completed the connection
         if (mConnectThread != null) {
-            mConnectThread.cancel()
+            mConnectThread!!.cancel()
             mConnectThread = null
         }
 
         // Cancel any thread currently running a connection
         if (mConnectedThread != null) {
-            mConnectedThread.cancel()
+            mConnectedThread!!.cancel()
             mConnectedThread = null
         }
 
         // Cancel the accept thread because we only want to connect to one device
         if (mSecureAcceptThread != null) {
-            mSecureAcceptThread.cancel()
+            mSecureAcceptThread!!.cancel()
             mSecureAcceptThread = null
         }
         if (mInsecureAcceptThread != null) {
-            mInsecureAcceptThread.cancel()
+            mInsecureAcceptThread!!.cancel()
             mInsecureAcceptThread = null
         }
 
         // Start the thread to manage the connection and perform transmissions
         mConnectedThread = ConnectedThread(socket, socketType)
-        mConnectedThread.start()
+        mConnectedThread!!.start()
 
         // Send the name of the connected device back to the UI Activity
         val msg = mHandler.obtainMessage(Constants.MESSAGE_DEVICE_NAME)
@@ -159,7 +170,7 @@ class BluetoothChatService(context: Context, handler: Handler){
         msg.setData(bundle)
         mHandler.sendMessage(msg)
         // Update UI title
-        updateUserInterfaceTitle()
+        //updateUserInterfaceTitle()
     }
 
     /**
@@ -169,27 +180,27 @@ class BluetoothChatService(context: Context, handler: Handler){
         Log.d(TAG, "stop")
 
         if (mConnectThread != null) {
-            mConnectThread.cancel()
+            mConnectThread!!.cancel()
             mConnectThread = null
         }
 
         if (mConnectedThread != null) {
-            mConnectedThread.cancel()
+            mConnectedThread!!.cancel()
             mConnectedThread = null
         }
 
         if (mSecureAcceptThread != null) {
-            mSecureAcceptThread.cancel()
+            mSecureAcceptThread!!.cancel()
             mSecureAcceptThread = null
         }
 
         if (mInsecureAcceptThread != null) {
-            mInsecureAcceptThread.cancel()
+            mInsecureAcceptThread!!.cancel()
             mInsecureAcceptThread = null
         }
         mState = STATE_NONE
         // Update UI title
-        updateUserInterfaceTitle()
+        //updateUserInterfaceTitle()
     }
 
     /**
@@ -205,7 +216,7 @@ class BluetoothChatService(context: Context, handler: Handler){
         // Synchronize a copy of the ConnectedThread
         synchronized(this) {
             if (mState !== STATE_CONNECTED) return
-            r = mConnectedThread
+            r = mConnectedThread!!
         }
         // Perform the write unsynchronized
         r.write(out)
@@ -268,17 +279,17 @@ class BluetoothChatService(context: Context, handler: Handler){
             // Create a new listening server socket
             try {
                 if (secure) {
-                    tmp = mAdapter.listenUsingRfcommWithServiceRecord(NAME_SECURE,
+                    tmp = mAdapter!!.listenUsingRfcommWithServiceRecord(NAME_SECURE,
                             MY_UUID_SECURE)
                 } else {
-                    tmp = mAdapter.listenUsingInsecureRfcommWithServiceRecord(
+                    tmp = mAdapter!!.listenUsingInsecureRfcommWithServiceRecord(
                             NAME_INSECURE, MY_UUID_INSECURE)
                 }
             } catch (e: IOException) {
                 Log.e(TAG, "Socket Type: " + mSocketType + "listen() failed", e)
             }
 
-            mmServerSocket = tmp
+            mmServerSocket = tmp!!
             mState = STATE_LISTEN
         }
 
@@ -306,7 +317,7 @@ class BluetoothChatService(context: Context, handler: Handler){
                         when (mState) {
                             STATE_LISTEN, STATE_CONNECTING ->
                                 // Situation normal. Start the connected thread.
-                                connected(socket, socket!!.remoteDevice,
+                                connected(socket!!, socket!!.remoteDevice,
                                         mSocketType)
                             STATE_NONE, STATE_CONNECTED ->
                                 // Either not ready or already connected. Terminate new socket.
@@ -316,6 +327,8 @@ class BluetoothChatService(context: Context, handler: Handler){
                                     Log.e(TAG, "Could not close unwanted socket", e)
                                 }
 
+                            else -> {
+                            }
                         }
                     }
                 }
@@ -363,7 +376,7 @@ class BluetoothChatService(context: Context, handler: Handler){
                 Log.e(TAG, "Socket Type: " + mSocketType + "create() failed", e)
             }
 
-            mmSocket = tmp
+            mmSocket = tmp!!
             mState = STATE_CONNECTING
         }
 
@@ -372,7 +385,7 @@ class BluetoothChatService(context: Context, handler: Handler){
             name = "ConnectThread" + mSocketType
 
             // Always cancel discovery because it will slow down a connection
-            mAdapter.cancelDiscovery()
+            mAdapter!!.cancelDiscovery()
 
             // Make a connection to the BluetoothSocket
             try {
@@ -433,8 +446,8 @@ class BluetoothChatService(context: Context, handler: Handler){
                 Log.e(TAG, "temp sockets not created", e)
             }
 
-            mmInStream = tmpIn
-            mmOutStream = tmpOut
+            mmInStream = tmpIn!!
+            mmOutStream = tmpOut!!
             mState = STATE_CONNECTED
         }
 
