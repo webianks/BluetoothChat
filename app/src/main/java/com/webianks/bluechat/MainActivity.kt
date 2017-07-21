@@ -23,9 +23,6 @@ import android.support.v7.app.AlertDialog
 import android.widget.*
 
 
-
-
-
 class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickListener {
 
     private val REQUEST_ENABLE_BT = 123
@@ -164,12 +161,12 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
 
         checkPermissions()
 
-        /* val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
-         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300)
-         startActivity(discoverableIntent)*/
+        val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300)
+        startActivity(discoverableIntent)
     }
 
-    private fun startDiscovery(){
+    private fun startDiscovery() {
 
         headerLabelContainer.visibility = View.VISIBLE
         progressBar.visibility = View.VISIBLE
@@ -198,13 +195,13 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
                 val deviceName = device.name
                 val deviceHardwareAddress = device.address // MAC address
 
-                val deviceData = DeviceData(deviceName,deviceHardwareAddress)
+                val deviceData = DeviceData(deviceName, deviceHardwareAddress)
                 mDeviceList.add(deviceData)
 
                 devicesAdapter.notifyDataSetChanged()
             }
 
-            if(BluetoothAdapter.ACTION_DISCOVERY_FINISHED == action) {
+            if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED == action) {
                 progressBar.visibility = View.INVISIBLE
                 headerLabel.text = getString(R.string.found)
             }
@@ -253,7 +250,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
     }
 
     override fun itemClicked(deviceData: DeviceData) {
-         connectDevice(deviceData)
+        connectDevice(deviceData)
     }
 
     private fun connectDevice(deviceData: DeviceData) {
@@ -264,7 +261,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
 
         val device = mBtAdapter?.getRemoteDevice(deviceAddress)
         // Attempt to connect to the device
-        mChatService?.connect(device, false)
+        mChatService?.connect(device, true)
 
     }
 
@@ -297,7 +294,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
             when (msg.what) {
                 Constants.MESSAGE_STATE_CHANGE -> {
 
-                    Log.d(TAG,"State changed ")
+                    Log.d(TAG, "State changed ")
 
                     when (msg.arg1) {
                         BluetoothChatService.STATE_CONNECTED -> {
@@ -329,13 +326,14 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
                     // save the connected device's name
                     //mConnectedDeviceName = msg.data.getString(Constants.DEVICE_NAME)
                     //if (null != activity) {
-                       // Toast.makeText(activity, "Connected to " + mConnectedDeviceName, Toast.LENGTH_SHORT).show()
-                   // }
+                    // Toast.makeText(activity, "Connected to " + mConnectedDeviceName, Toast.LENGTH_SHORT).show()
+                    // }
                 }
-                Constants.MESSAGE_TOAST -> {}//if (null != activity) {
-                    //Toast.makeText(activity, msg.data.getString(Constants.TOAST),
-                           // Toast.LENGTH_SHORT).show()
-                }
+                Constants.MESSAGE_TOAST -> {
+                }//if (null != activity) {
+            //Toast.makeText(activity, msg.data.getString(Constants.TOAST),
+            // Toast.LENGTH_SHORT).show()
             }
         }
-   }
+    }
+}

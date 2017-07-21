@@ -300,7 +300,7 @@ class BluetoothChatService(context: Context, handler: Handler){
                     "BEGIN mAcceptThread" + this)
             name = "AcceptThread" + mSocketType
 
-            var socket: BluetoothSocket? = null
+            var socket: BluetoothSocket?
 
             // Listen to the server socket if we're not connected
             while (mState != STATE_CONNECTED) {
