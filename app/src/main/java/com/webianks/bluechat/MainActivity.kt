@@ -171,6 +171,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
         headerLabelContainer.visibility = View.VISIBLE
         progressBar.visibility = View.VISIBLE
         headerLabel.text = getString(R.string.searching)
+        mDeviceList.clear()
 
         // If we're already discovering, stop it
         if (mBtAdapter?.isDiscovering!!)
@@ -294,4 +295,5 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
             }
         }
     }
+
 }
