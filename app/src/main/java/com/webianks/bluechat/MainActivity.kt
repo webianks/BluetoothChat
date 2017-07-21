@@ -1,6 +1,7 @@
 package com.webianks.bluechat
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -20,6 +21,8 @@ import android.support.v7.widget.Toolbar
 import android.view.View
 import android.support.v7.app.AlertDialog
 import android.widget.*
+
+
 
 
 
@@ -261,7 +264,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
 
         val device = mBtAdapter?.getRemoteDevice(deviceAddress)
         // Attempt to connect to the device
-        mChatService?.connect(device, true)
+        mChatService?.connect(device, false)
 
     }
 
@@ -288,12 +291,51 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
     /**
      * The Handler that gets information back from the BluetoothChatService
      */
-    private val mHandler = object : Handler() {
+    private val mHandler = @SuppressLint("HandlerLeak")
+    object : Handler() {
         override fun handleMessage(msg: Message) {
             when (msg.what) {
+                Constants.MESSAGE_STATE_CHANGE -> {
 
+                    Log.d(TAG,"State changed ")
+
+                    when (msg.arg1) {
+                        BluetoothChatService.STATE_CONNECTED -> {
+                            //setStatus(getString(R.string.title_connected_to, mConnectedDeviceName))
+                            //mConversationArrayAdapter.clear()
+                        }
+
+                        BluetoothChatService.STATE_CONNECTING -> //setStatus(R.string.title_connecting)
+                        {
+                        }
+                        BluetoothChatService.STATE_LISTEN, BluetoothChatService.STATE_NONE -> {
+                        } //setStatus(R.string.title_not_connected)
+
+                    }
+                }
+                Constants.MESSAGE_WRITE -> {
+                    val writeBuf = msg.obj as ByteArray
+                    // construct a string from the buffer
+                    val writeMessage = String(writeBuf)
+                    //mConversationArrayAdapter.add("Me:  " + writeMessage)
+                }
+                Constants.MESSAGE_READ -> {
+                    val readBuf = msg.obj as ByteArray
+                    // construct a string from the valid bytes in the buffer
+                    val readMessage = String(readBuf, 0, msg.arg1)
+                    //mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage)
+                }
+                Constants.MESSAGE_DEVICE_NAME -> {
+                    // save the connected device's name
+                    //mConnectedDeviceName = msg.data.getString(Constants.DEVICE_NAME)
+                    //if (null != activity) {
+                       // Toast.makeText(activity, "Connected to " + mConnectedDeviceName, Toast.LENGTH_SHORT).show()
+                   // }
+                }
+                Constants.MESSAGE_TOAST -> {}//if (null != activity) {
+                    //Toast.makeText(activity, msg.data.getString(Constants.TOAST),
+                           // Toast.LENGTH_SHORT).show()
+                }
             }
         }
-    }
-
-}
+   }
