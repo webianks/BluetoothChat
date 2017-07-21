@@ -11,6 +11,8 @@ import android.util.Log
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.os.Build
+import android.os.Handler
+import android.os.Message
 import android.support.v7.app.ActionBar
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -18,6 +20,8 @@ import android.support.v7.widget.Toolbar
 import android.view.View
 import android.support.v7.app.AlertDialog
 import android.widget.*
+
+
 
 class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickListener {
 
@@ -34,7 +38,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
     private lateinit var headerLabel: TextView
     private lateinit var headerLabelContainer: LinearLayout
 
-    private val mChatService: BluetoothChatService? = null
+    private var mChatService: BluetoothChatService? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,6 +86,9 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
 
         // Get the local Bluetooth adapter
         mBtAdapter = BluetoothAdapter.getDefaultAdapter()
+
+        // Initialize the BluetoothChatService to perform bluetooth connections
+        mChatService = BluetoothChatService(this, mHandler)
 
         if (mBtAdapter == null)
             showAlertAndExit()
@@ -247,6 +254,14 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
 
     private fun connectDevice(deviceData: DeviceData) {
 
+        // Cancel discovery because it's costly and we're about to connect
+        mBtAdapter?.cancelDiscovery()
+        val deviceAddress = deviceData.deviceHardwareAddress
+
+        val device = mBtAdapter?.getRemoteDevice(deviceAddress)
+        // Attempt to connect to the device
+        mChatService?.connect(device, true)
+
     }
 
     override fun onResume() {
@@ -256,9 +271,9 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
         // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
         if (mChatService != null) {
             // Only if the state is STATE_NONE, do we know that we haven't started already
-            if (mChatService.getState() == BluetoothChatService.STATE_NONE) {
+            if (mChatService?.getState() == BluetoothChatService.STATE_NONE) {
                 // Start the Bluetooth chat services
-                mChatService.start()
+                mChatService?.start()
             }
         }
     }
@@ -266,5 +281,17 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(mReceiver)
+    }
+
+
+    /**
+     * The Handler that gets information back from the BluetoothChatService
+     */
+    private val mHandler = object : Handler() {
+        override fun handleMessage(msg: Message) {
+            when (msg.what) {
+
+            }
+        }
     }
 }
