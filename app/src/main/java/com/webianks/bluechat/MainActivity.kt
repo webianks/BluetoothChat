@@ -74,6 +74,10 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
             findDevices()
         }
 
+        findViewById<Button>(R.id.make_visible).setOnClickListener{
+            makeVisible()
+        }
+
         devicesAdapter = DevicesRecyclerViewAdapter(context = this, mDeviceList = mDeviceList)
         recyclerView.adapter = devicesAdapter
         devicesAdapter.setItemClickListener(this)
@@ -110,10 +114,18 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
                 for (device in pairedDevices!!) {
                     val deviceName = device.name
                     val deviceHardwareAddress = device.address // MAC address
-                    Log.d(TAG, "deviceName: $deviceName :: deviceHardwareAddress: $deviceHardwareAddress")
+                    Log.d(TAG, "Already paired: deviceName: $deviceName :: deviceHardwareAddress: $deviceHardwareAddress")
                 }
             }
         }
+    }
+
+    private fun makeVisible() {
+
+        val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300)
+        startActivity(discoverableIntent)
+
     }
 
     private fun checkPermissions() {
@@ -164,10 +176,6 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
     private fun findDevices() {
 
         checkPermissions()
-
-        val discoverableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
-        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300)
-        startActivity(discoverableIntent)
     }
 
     private fun startDiscovery() {
@@ -300,9 +308,8 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
             val mConnectedDeviceName = bundle.getString(Constants.DEVICE_NAME)
 
             when (msg.what) {
-                Constants.MESSAGE_STATE_CHANGE -> {
 
-                    Log.d(TAG, "State changed ")
+                Constants.MESSAGE_STATE_CHANGE -> {
 
                     when (msg.arg1) {
                         BluetoothChatService.STATE_CONNECTED -> {

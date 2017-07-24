@@ -23,7 +23,6 @@
                 android:id="@+id/toolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:text="@string/app_name"
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="@dimen/titleTextSize"
@@ -68,17 +67,45 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/search_devices"
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/buttonHeight"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_margin="32dp"
-        android:background="@drawable/selectable_background"
-        android:text="@string/search_devices"
-        android:textAllCaps="false"
-        android:textColor="@color/colorAccent"
-        android:textStyle="bold" />
+        android:weightSum="2"
+        >
+
+        <Button
+            android:id="@+id/search_devices"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/buttonHeight"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/selectable_background"
+            android:text="@string/search_devices"
+            android:textAllCaps="false"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/make_visible"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/buttonHeight"
+            android:layout_marginEnd="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/selectable_background"
+            android:text="@string/make_discoverable"
+            android:textAllCaps="false"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
 
 </RelativeLayout>

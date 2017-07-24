@@ -11,4 +11,5 @@
     <string name="connecting">Connecting..</string>
     <string name="searching">Searching..</string>
     <string name="found">Found devices</string>
+    <string name="make_discoverable">Make Visible</string>
 </resources>
