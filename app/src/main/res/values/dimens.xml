@@ -3,4 +3,5 @@
     <dimen name="titleTextSize">21sp</dimen>
     <dimen name="buttonHeight">55dp</dimen>
     <dimen name="large_32_margin">32dp</dimen>
+    <dimen name="large_64_margin">50dp</dimen>
 </resources>

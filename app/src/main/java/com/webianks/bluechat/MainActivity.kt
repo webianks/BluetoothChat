@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
     private val TAG = javaClass.simpleName
     private lateinit var progressBar: ProgressBar
     private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerViewPaired: RecyclerView
     private val mDeviceList = arrayListOf<DeviceData>()
     private lateinit var devicesAdapter: DevicesRecyclerViewAdapter
     private var mBtAdapter: BluetoothAdapter? = null
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
     private val PERMISSION_REQUEST_LOCATION_KEY = "PERMISSION_REQUEST_LOCATION"
     private var alreadyAskedForPermission = false
     private lateinit var headerLabel: TextView
+    private lateinit var headerLabelPaired: TextView
     private lateinit var headerLabelContainer: LinearLayout
     private lateinit var status: TextView
     private lateinit var connectionDot: ImageView
@@ -62,7 +64,9 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
 
         progressBar = findViewById(R.id.progressBar)
         recyclerView = findViewById(R.id.recyclerView)
+        recyclerViewPaired = findViewById(R.id.recyclerViewPaired)
         headerLabel = findViewById(R.id.headerLabel)
+        headerLabelPaired = findViewById(R.id.headerLabelPaired)
         headerLabelContainer = findViewById(R.id.headerLabelContainer)
         status = findViewById(R.id.status)
         connectionDot = findViewById(R.id.connectionDot)
@@ -75,6 +79,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
             alreadyAskedForPermission = savedInstanceState.getBoolean(PERMISSION_REQUEST_LOCATION_KEY, false)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerViewPaired.layoutManager = LinearLayoutManager(this)
 
         findViewById<Button>(R.id.search_devices).setOnClickListener {
             findDevices()
@@ -115,6 +120,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
 
             // Get a set of currently paired devices
             val pairedDevices = mBtAdapter?.bondedDevices
+            val mPairedDeviceList = arrayListOf<DeviceData>()
 
             // If there are paired devices, add each one to the ArrayAdapter
             if (pairedDevices?.size ?: 0 > 0) {
@@ -122,8 +128,14 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
                 for (device in pairedDevices!!) {
                     val deviceName = device.name
                     val deviceHardwareAddress = device.address // MAC address
-                    Log.d(TAG, "Already paired: deviceName: $deviceName :: deviceHardwareAddress: $deviceHardwareAddress")
+                    mPairedDeviceList.add(DeviceData(deviceName,deviceHardwareAddress))
                 }
+
+                val devicesAdapter = DevicesRecyclerViewAdapter(context = this, mDeviceList = mPairedDeviceList)
+                recyclerViewPaired.adapter = devicesAdapter
+                devicesAdapter.setItemClickListener(this)
+                headerLabelPaired.visibility = View.VISIBLE
+
             }
         }
 

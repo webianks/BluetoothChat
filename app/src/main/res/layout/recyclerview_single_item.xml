@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:layerType="software"
-        android:layout_marginStart="@dimen/large_32_margin"
+        android:layout_marginStart="@dimen/large_64_margin"
         android:background="@drawable/dashed_background" />
 
 </LinearLayout>
