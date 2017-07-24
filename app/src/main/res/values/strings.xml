@@ -15,5 +15,5 @@
     <string name="not_connected">Not connected</string>
     <string name="bluetooth_not_enabled">Bluetooth not enabled</string>
     <string name="bluetooth_on">Bluetooth is enabled</string>
-    <string name="connected_to">Connected to :</string>
+    <string name="connected_to">Connected to: </string>
 </resources>

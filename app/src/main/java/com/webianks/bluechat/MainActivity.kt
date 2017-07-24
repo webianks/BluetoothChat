@@ -74,14 +74,13 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
         if (savedInstanceState != null)
             alreadyAskedForPermission = savedInstanceState.getBoolean(PERMISSION_REQUEST_LOCATION_KEY, false)
 
-        val llm = LinearLayoutManager(this)
-        recyclerView.layoutManager = llm
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
         findViewById<Button>(R.id.search_devices).setOnClickListener {
             findDevices()
         }
 
-        findViewById<Button>(R.id.make_visible).setOnClickListener{
+        findViewById<Button>(R.id.make_visible).setOnClickListener {
             makeVisible()
         }
 
@@ -110,7 +109,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
             if (mBtAdapter?.isEnabled == false) {
                 val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-            }else{
+            } else {
                 status.text = getString(R.string.not_connected)
             }
 
@@ -118,7 +117,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
             val pairedDevices = mBtAdapter?.bondedDevices
 
             // If there are paired devices, add each one to the ArrayAdapter
-            if (pairedDevices?.size ?: 0 > 0 ) {
+            if (pairedDevices?.size ?: 0 > 0) {
                 // There are paired devices. Get the name and address of each paired device.
                 for (device in pairedDevices!!) {
                     val deviceName = device.name
@@ -129,10 +128,11 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
         }
 
 
-       val fragmentManager = supportFragmentManager
-       val fragmentTransaction = fragmentManager.beginTransaction()
-       fragmentTransaction.add(R.id.mainScreen,ChatFragment.newInstance(),"ChatFragment")
-       fragmentTransaction.commit()
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.mainScreen, ChatFragment.newInstance(), "ChatFragment")
+        fragmentTransaction.addToBackStack("ChatFragment")
+        fragmentTransaction.commit()
 
     }
 
@@ -321,29 +321,29 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
     object : Handler() {
         override fun handleMessage(msg: Message) {
 
-            Log.d(TAG,"Handle message called.")
-
-            val bundle = msg.data
-            val mConnectedDeviceName = bundle.getString(Constants.DEVICE_NAME)
+            var mConnectedDeviceName = " "
 
             when (msg.what) {
 
                 Constants.MESSAGE_STATE_CHANGE -> {
 
                     when (msg.arg1) {
+
                         BluetoothChatService.STATE_CONNECTED -> {
-                            status.text = getString(R.string.connected_to,mConnectedDeviceName)
+
+                            status.text = getString(R.string.connected_to) + " "+ mConnectedDeviceName
                             connectionDot.setImageDrawable(getDrawable(R.drawable.ic_circle_connected))
-                            Toast.makeText(this@MainActivity,"You are now connected to $mConnectedDeviceName",Toast.LENGTH_SHORT).show()
+                            //Toast.makeText(this@MainActivity, "You are now connected to $mConnectedDeviceName", Toast.LENGTH_SHORT).show()
                             //mConversationArrayAdapter.clear()
                         }
 
-                        BluetoothChatService.STATE_CONNECTING -> //setStatus(R.string.title_connecting)
-                        {
+                        BluetoothChatService.STATE_CONNECTING -> {
+                            status.text = getString(R.string.connecting)
                         }
-                        BluetoothChatService.STATE_LISTEN, BluetoothChatService.STATE_NONE -> {
-                        } //setStatus(R.string.title_not_connected)
 
+                        BluetoothChatService.STATE_LISTEN, BluetoothChatService.STATE_NONE -> {
+                            status.text = getString(R.string.not_connected, mConnectedDeviceName)
+                        }
                     }
                 }
                 Constants.MESSAGE_WRITE -> {
@@ -360,16 +360,25 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
                 }
                 Constants.MESSAGE_DEVICE_NAME -> {
                     // save the connected device's name
-                    //mConnectedDeviceName = msg.data.getString(Constants.DEVICE_NAME)
-                    //if (null != activity) {
-                    // Toast.makeText(activity, "Connected to " + mConnectedDeviceName, Toast.LENGTH_SHORT).show()
-                    // }
+                    mConnectedDeviceName = msg.data.getString(Constants.DEVICE_NAME)
+                    status.text = getString(R.string.connected_to) + " " +mConnectedDeviceName
+                    connectionDot.setImageDrawable(getDrawable(R.drawable.ic_circle_connected))
+                    Toast.makeText(this@MainActivity, "Connected to " + mConnectedDeviceName, Toast.LENGTH_SHORT).show()
+
                 }
-                Constants.MESSAGE_TOAST -> {
-                }//if (null != activity) {
-            //Toast.makeText(activity, msg.data.getString(Constants.TOAST),
-            // Toast.LENGTH_SHORT).show()
+                Constants.MESSAGE_TOAST ->
+
+                    Toast.makeText(this@MainActivity,
+                            msg.data.getString(Constants.TOAST), Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount == 0)
+            super.onBackPressed()
+        else
+            supportFragmentManager.popBackStack()
     }
 }
