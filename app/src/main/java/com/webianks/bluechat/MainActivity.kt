@@ -5,23 +5,28 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.content.*
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
-import android.util.Log
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.os.Build
+import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.support.v7.app.ActionBar
+import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.View
-import android.support.v7.app.AlertDialog
-import android.widget.*
-
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.TextView
 
 class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickListener {
 
@@ -92,22 +97,24 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
 
         if (mBtAdapter == null)
             showAlertAndExit()
+        else {
 
-        if (!mBtAdapter?.isEnabled!!) {
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-        }
+            if (!mBtAdapter?.isEnabled!!) {
+                val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+            }
 
-        // Get a set of currently paired devices
-        val pairedDevices = mBtAdapter?.bondedDevices
+            // Get a set of currently paired devices
+            val pairedDevices = mBtAdapter?.bondedDevices
 
-        // If there are paired devices, add each one to the ArrayAdapter
-        if (pairedDevices?.size!! > 0) {
-            // There are paired devices. Get the name and address of each paired device.
-            for (device in pairedDevices) {
-                val deviceName = device.name
-                val deviceHardwareAddress = device.address // MAC address
-                Log.d(TAG, "deviceName: $deviceName :: deviceHardwareAddress: $deviceHardwareAddress")
+            // If there are paired devices, add each one to the ArrayAdapter
+            if (pairedDevices?.size ?: 0 > 0 ) {
+                // There are paired devices. Get the name and address of each paired device.
+                for (device in pairedDevices!!) {
+                    val deviceName = device.name
+                    val deviceHardwareAddress = device.address // MAC address
+                    Log.d(TAG, "deviceName: $deviceName :: deviceHardwareAddress: $deviceHardwareAddress")
+                }
             }
         }
     }
@@ -174,11 +181,11 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
         mDeviceList.clear()
 
         // If we're already discovering, stop it
-        if (mBtAdapter?.isDiscovering!!)
-            mBtAdapter!!.cancelDiscovery()
+        if (mBtAdapter?.isDiscovering ?: false)
+            mBtAdapter?.cancelDiscovery()
 
         // Request discover from BluetoothAdapter
-        mBtAdapter!!.startDiscovery()
+        mBtAdapter?.startDiscovery()
     }
 
     // Create a BroadcastReceiver for ACTION_FOUND.
