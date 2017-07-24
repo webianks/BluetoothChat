@@ -17,4 +17,5 @@
     <string name="bluetooth_on">Bluetooth is enabled</string>
     <string name="connected_to">Connected to: </string>
     <string name="paired_devices">Paired Devices</string>
+    <string name="write_something">Write something..</string>
 </resources>

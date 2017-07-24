@@ -3,5 +3,8 @@
     <dimen name="titleTextSize">21sp</dimen>
     <dimen name="buttonHeight">55dp</dimen>
     <dimen name="large_32_margin">32dp</dimen>
-    <dimen name="large_64_margin">50dp</dimen>
+    <dimen name="large_6_margin">50dp</dimen>
+    <dimen name="large_label_margin">20dp</dimen>
+    <dimen name="large_dash_margin">35dp</dimen>
+    <dimen name="message_height_min">48dp</dimen>
 </resources>
