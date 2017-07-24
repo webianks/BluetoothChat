@@ -291,6 +291,10 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
     private val mHandler = @SuppressLint("HandlerLeak")
     object : Handler() {
         override fun handleMessage(msg: Message) {
+
+            val bundle = msg.data
+            val mConnectedDeviceName = bundle.getString(Constants.DEVICE_NAME)
+
             when (msg.what) {
                 Constants.MESSAGE_STATE_CHANGE -> {
 
@@ -299,6 +303,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
                     when (msg.arg1) {
                         BluetoothChatService.STATE_CONNECTED -> {
                             //setStatus(getString(R.string.title_connected_to, mConnectedDeviceName))
+                            Toast.makeText(this@MainActivity,"You are now connected to $mConnectedDeviceName",Toast.LENGTH_SHORT).show()
                             //mConversationArrayAdapter.clear()
                         }
 
