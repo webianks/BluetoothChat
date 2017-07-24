@@ -21,7 +21,7 @@ class BluetoothChatService(context: Context, handler: Handler){
 
     // Member fields
     private var mAdapter: BluetoothAdapter? = null
-    private val mHandler: Handler? = null
+    private var mHandler: Handler? = null
     private var mSecureAcceptThread: AcceptThread? = null
     private var mInsecureAcceptThread: AcceptThread? = null
     private var mConnectThread: ConnectThread? = null
@@ -53,6 +53,7 @@ class BluetoothChatService(context: Context, handler: Handler){
         mAdapter = BluetoothAdapter.getDefaultAdapter()
         mState = STATE_NONE
         mNewState = mState
+        mHandler = handler
     }
 
     /**
