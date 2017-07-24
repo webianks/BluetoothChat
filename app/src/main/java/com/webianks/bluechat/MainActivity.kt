@@ -39,6 +39,8 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
     private var alreadyAskedForPermission = false
     private lateinit var headerLabel: TextView
     private lateinit var headerLabelContainer: LinearLayout
+    private lateinit var status: TextView
+    private lateinit var connectionDot: ImageView
 
     private var mChatService: BluetoothChatService? = null
 
@@ -61,6 +63,10 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
         recyclerView = findViewById(R.id.recyclerView)
         headerLabel = findViewById(R.id.headerLabel)
         headerLabelContainer = findViewById(R.id.headerLabelContainer)
+        status = findViewById(R.id.status)
+        connectionDot = findViewById(R.id.connectionDot)
+
+        status.text = getString(R.string.bluetooth_not_enabled)
 
         headerLabelContainer.visibility = View.INVISIBLE
 
@@ -100,9 +106,11 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
             showAlertAndExit()
         else {
 
-            if (!mBtAdapter?.isEnabled!!) {
+            if (mBtAdapter?.isEnabled == false) {
                 val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+            }else{
+                status.text = getString(R.string.not_connected)
             }
 
             // Get a set of currently paired devices
@@ -227,6 +235,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
 
         if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_OK) {
             //Bluetooth is now connected.
+            status.text = getString(R.string.not_connected)
 
         }
         //label.setText("Bluetooth is now enabled.")
@@ -313,7 +322,8 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
 
                     when (msg.arg1) {
                         BluetoothChatService.STATE_CONNECTED -> {
-                            //setStatus(getString(R.string.title_connected_to, mConnectedDeviceName))
+                            status.text = getString(R.string.connected_to,mConnectedDeviceName)
+                            connectionDot.setImageDrawable(getDrawable(R.drawable.ic_circle_connected))
                             Toast.makeText(this@MainActivity,"You are now connected to $mConnectedDeviceName",Toast.LENGTH_SHORT).show()
                             //mConversationArrayAdapter.clear()
                         }

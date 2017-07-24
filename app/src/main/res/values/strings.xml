@@ -12,4 +12,8 @@
     <string name="searching">Searching..</string>
     <string name="found">Found devices</string>
     <string name="make_discoverable">Make Visible</string>
+    <string name="not_connected">Not connected</string>
+    <string name="bluetooth_not_enabled">Bluetooth not enabled</string>
+    <string name="bluetooth_on">Bluetooth is enabled</string>
+    <string name="connected_to">Connected to :</string>
 </resources>
