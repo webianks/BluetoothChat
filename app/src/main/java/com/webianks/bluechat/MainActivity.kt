@@ -3,7 +3,6 @@ package com.webianks.bluechat
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.FragmentManager
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
@@ -16,6 +15,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.support.design.widget.Snackbar
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
@@ -126,13 +126,6 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
                 }
             }
         }
-
-
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.mainScreen, ChatFragment.newInstance(), "ChatFragment")
-        fragmentTransaction.addToBackStack("ChatFragment")
-        fragmentTransaction.commit()
 
     }
 
@@ -284,11 +277,16 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
 
     private fun connectDevice(deviceData: DeviceData) {
 
+
         // Cancel discovery because it's costly and we're about to connect
         mBtAdapter?.cancelDiscovery()
         val deviceAddress = deviceData.deviceHardwareAddress
 
         val device = mBtAdapter?.getRemoteDevice(deviceAddress)
+
+        status.text = getString(R.string.connecting)
+        connectionDot.setImageDrawable(getDrawable(R.drawable.ic_circle_connecting))
+
         // Attempt to connect to the device
         mChatService?.connect(device, true)
 
@@ -333,16 +331,21 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
 
                             status.text = getString(R.string.connected_to) + " "+ mConnectedDeviceName
                             connectionDot.setImageDrawable(getDrawable(R.drawable.ic_circle_connected))
-                            //Toast.makeText(this@MainActivity, "You are now connected to $mConnectedDeviceName", Toast.LENGTH_SHORT).show()
+                            Snackbar.make(findViewById(R.id.mainScreen),"Connected to " + mConnectedDeviceName,Snackbar.LENGTH_SHORT).show()
                             //mConversationArrayAdapter.clear()
                         }
 
                         BluetoothChatService.STATE_CONNECTING -> {
                             status.text = getString(R.string.connecting)
+                            connectionDot.setImageDrawable(getDrawable(R.drawable.ic_circle_connecting))
+
                         }
 
                         BluetoothChatService.STATE_LISTEN, BluetoothChatService.STATE_NONE -> {
-                            status.text = getString(R.string.not_connected, mConnectedDeviceName)
+                            status.text = getString(R.string.not_connected)
+                            connectionDot.setImageDrawable(getDrawable(R.drawable.ic_circle_red))
+                            Snackbar.make(findViewById(R.id.mainScreen),getString(R.string.not_connected),Snackbar.LENGTH_SHORT).show()
+
                         }
                     }
                 }
@@ -363,15 +366,25 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
                     mConnectedDeviceName = msg.data.getString(Constants.DEVICE_NAME)
                     status.text = getString(R.string.connected_to) + " " +mConnectedDeviceName
                     connectionDot.setImageDrawable(getDrawable(R.drawable.ic_circle_connected))
-                    Toast.makeText(this@MainActivity, "Connected to " + mConnectedDeviceName, Toast.LENGTH_SHORT).show()
-
+                    Snackbar.make(findViewById(R.id.mainScreen),"Connected to " + mConnectedDeviceName,Snackbar.LENGTH_SHORT).show()
+                    showChatFragment()
                 }
-                Constants.MESSAGE_TOAST ->
-
-                    Toast.makeText(this@MainActivity,
-                            msg.data.getString(Constants.TOAST), Toast.LENGTH_SHORT).show()
+                Constants.MESSAGE_TOAST -> {
+                    status.text = getString(R.string.not_connected)
+                    connectionDot.setImageDrawable(getDrawable(R.drawable.ic_circle_red))
+                    Snackbar.make(findViewById(R.id.mainScreen),msg.data.getString(Constants.TOAST),Snackbar.LENGTH_SHORT).show()
+                  }
             }
         }
+    }
+
+    private fun showChatFragment() {
+
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.mainScreen, ChatFragment.newInstance(), "ChatFragment")
+        fragmentTransaction.addToBackStack("ChatFragment")
+        fragmentTransaction.commit()
     }
 
 
