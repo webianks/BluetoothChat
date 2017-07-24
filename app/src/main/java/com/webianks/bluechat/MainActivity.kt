@@ -3,6 +3,7 @@ package com.webianks.bluechat
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.FragmentManager
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
@@ -126,6 +127,13 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
                 }
             }
         }
+
+
+       val fragmentManager = supportFragmentManager
+       val fragmentTransaction = fragmentManager.beginTransaction()
+       fragmentTransaction.add(R.id.mainScreen,ChatFragment.newInstance(),"ChatFragment")
+       fragmentTransaction.commit()
+
     }
 
     private fun makeVisible() {
@@ -312,6 +320,8 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
     private val mHandler = @SuppressLint("HandlerLeak")
     object : Handler() {
         override fun handleMessage(msg: Message) {
+
+            Log.d(TAG,"Handle message called.")
 
             val bundle = msg.data
             val mConnectedDeviceName = bundle.getString(Constants.DEVICE_NAME)
