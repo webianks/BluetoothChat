@@ -7,7 +7,6 @@
     android:clickable="true"
     android:focusable="true">
 
-
     <LinearLayout
         android:id="@+id/messageLayout"
         android:layout_width="match_parent"
@@ -23,11 +22,13 @@
         android:orientation="horizontal">
 
      <EditText
+         android:id="@+id/chatInput"
          android:layout_width="0dp"
          android:layout_weight="5"
          android:layout_marginTop="10dp"
          android:layout_marginStart="20dp"
-         android:layout_marginEnd="20dp"
+         android:layout_marginEnd="60dp"
+         android:textColorHint="@color/grey"
          android:hint="@string/write_something"
          android:background="@color/transparent"
          android:layout_height="wrap_content" />
@@ -37,19 +38,20 @@
     <FrameLayout
         android:layout_width="54dp"
         android:layout_height="54dp"
-        android:background="@drawable/circular_background"
+        android:background="@drawable/selectable_background_rounded"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="18dp"
+        android:clickable="true"
+        android:focusable="true"
         android:layout_marginEnd="@dimen/large_label_margin">
 
       <ImageView
+          android:id="@+id/sendIcon"
           android:layout_width="32dp"
           android:layout_height="32dp"
           android:layout_gravity="center"
-          android:src="@drawable/ic_send"
-          />
-
+          android:src="@drawable/ic_send_depri"/>
 
     </FrameLayout>
 
