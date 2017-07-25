@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
     private lateinit var  mConnectedDeviceName: String
 
     private var mChatService: BluetoothChatService? = null
+    private lateinit var chatFragment: ChatFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -292,7 +293,6 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
 
     private fun connectDevice(deviceData: DeviceData) {
 
-
         // Cancel discovery because it's costly and we're about to connect
         mBtAdapter?.cancelDiscovery()
         val deviceAddress = deviceData.deviceHardwareAddress
@@ -369,6 +369,8 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
                     val writeMessage = String(writeBuf)
                     Toast.makeText(this@MainActivity,"Me: $writeMessage",Toast.LENGTH_SHORT).show()
                     //mConversationArrayAdapter.add("Me:  " + writeMessage)
+                    chatFragment.communicate(writeMessage,Constants.MESSAGE_TYPE_SENT)
+
                 }
                 Constants.MESSAGE_READ -> {
                     val readBuf = msg.obj as ByteArray
@@ -376,6 +378,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
                     val readMessage = String(readBuf, 0, msg.arg1)
                     Toast.makeText(this@MainActivity,"$mConnectedDeviceName : $readMessage",Toast.LENGTH_SHORT).show()
                     //mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage)
+                    chatFragment.communicate(readMessage,Constants.MESSAGE_TYPE_RECEIVED)
                 }
                 Constants.MESSAGE_DEVICE_NAME -> {
                     // save the connected device's name
@@ -419,7 +422,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
 
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-        val chatFragment = ChatFragment.newInstance()
+        chatFragment = ChatFragment.newInstance()
         chatFragment.setCommunicationListener(this)
         fragmentTransaction.replace(R.id.mainScreen, chatFragment, "ChatFragment")
         fragmentTransaction.addToBackStack("ChatFragment")

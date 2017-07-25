@@ -1,7 +1,6 @@
 package com.webianks.bluechat
 
 import android.os.Bundle
-import android.os.RecoverySystem
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -11,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.text.Editable
+import android.util.Log
 import android.widget.FrameLayout
 import android.widget.ImageView
 
@@ -26,6 +26,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
     private var communicationListener: CommunicationListener? = null
     private var chatAdapter: ChatAdapter? = null
     private lateinit var recyclerviewChat: RecyclerView
+    private val messageList = arrayListOf<Message>()
 
     companion object {
         fun newInstance(): ChatFragment {
@@ -55,6 +56,9 @@ class ChatFragment : Fragment(), View.OnClickListener {
         sendButton = mView.findViewById(R.id.sendButton)
         recyclerviewChat = mView.findViewById(R.id.chatRecyclerView)
 
+        sendButton.isClickable = false
+        sendButton.isEnabled = false
+
         val llm = LinearLayoutManager(activity)
         llm.reverseLayout = true
         recyclerviewChat.layoutManager = llm
@@ -67,21 +71,17 @@ class ChatFragment : Fragment(), View.OnClickListener {
                 if (s.isNotEmpty()) {
                     chatIcon.setImageDrawable(activity.getDrawable(R.drawable.ic_send))
                     sendButton.isClickable = true
+                    sendButton.isEnabled = true
                 }else {
                     chatIcon.setImageDrawable(activity.getDrawable(R.drawable.ic_send_depri))
                     sendButton.isClickable = false
+                    sendButton.isEnabled = false
                 }
             }
         })
 
         sendButton.setOnClickListener(this)
 
-
-        val messageList = arrayListOf<Message>()
-
-        messageList.add(Message("Valar Morghulis",Constants.MESSAGE_TYPE_SENT))
-        messageList.add(Message("All men must die! ",Constants.MESSAGE_TYPE_RECEIVED))
-        messageList.add(Message("Yup ! :) ",Constants.MESSAGE_TYPE_SENT))
 
         chatAdapter = ChatAdapter(messageList.reversed(),activity)
         recyclerviewChat.adapter = chatAdapter
@@ -103,6 +103,12 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     interface CommunicationListener{
         fun onCommunication(message: String)
+    }
+
+    fun communicate(message: String, type: Int){
+        messageList.add(Message(message,type))
+        chatAdapter = ChatAdapter(messageList.reversed(),activity)
+        recyclerviewChat.adapter = chatAdapter
     }
 
 
