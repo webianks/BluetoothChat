@@ -92,6 +92,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
         if (chatInput.text.isNotEmpty()){
             communicationListener?.onCommunication(chatInput.text.toString())
+            chatInput.setText("")
         }
 
     }
@@ -109,6 +110,7 @@ class ChatFragment : Fragment(), View.OnClickListener {
         messageList.add(Message(message,type))
         chatAdapter = ChatAdapter(messageList.reversed(),activity)
         recyclerviewChat.adapter = chatAdapter
+        recyclerviewChat.scrollToPosition(0)
     }
 
 
