@@ -25,7 +25,8 @@ import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.*
 
-class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickListener {
+class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickListener, ChatFragment.CommunicationListener {
+
 
     private val REQUEST_ENABLE_BT = 123
     private val TAG = javaClass.simpleName
@@ -391,13 +392,40 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
         }
     }
 
+
+    private fun sendMessage(message: String) {
+
+        // Check that we're actually connected before trying anything
+        if (mChatService?.getState() != BluetoothChatService.STATE_CONNECTED) {
+            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
+            return
+        }
+
+        // Check that there's actually something to send
+        if (message.isNotEmpty()) {
+            // Get the message bytes and tell the BluetoothChatService to write
+            val send = message.toByteArray()
+            mChatService?.write(send)
+
+            // Reset out string buffer to zero and clear the edit text field
+            //mOutStringBuffer.setLength(0)
+            //mOutEditText.setText(mOutStringBuffer)
+        }
+    }
+
     private fun showChatFragment() {
 
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.mainScreen, ChatFragment.newInstance(), "ChatFragment")
+        val chatFragment = ChatFragment.newInstance()
+        chatFragment.setCommunicationListener(this)
+        fragmentTransaction.replace(R.id.mainScreen, chatFragment, "ChatFragment")
         fragmentTransaction.addToBackStack("ChatFragment")
         fragmentTransaction.commit()
+    }
+
+    override fun onCommunication(message: String) {
+           sendMessage(message)
     }
 
 

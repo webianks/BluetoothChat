@@ -36,14 +36,15 @@
     </LinearLayout>
 
     <FrameLayout
+        android:id="@+id/sendButton"
         android:layout_width="54dp"
         android:layout_height="54dp"
         android:background="@drawable/selectable_background_rounded"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="18dp"
-        android:clickable="true"
-        android:focusable="true"
+        android:clickable="false"
+        android:focusable="false"
         android:layout_marginEnd="@dimen/large_label_margin">
 
       <ImageView

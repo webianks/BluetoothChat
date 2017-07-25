@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.text.Editable
+import android.widget.FrameLayout
 import android.widget.ImageView
 
 
@@ -15,9 +16,11 @@ import android.widget.ImageView
  * Created by ramankit on 24/7/17.
  */
 
-class ChatFragment : Fragment() {
+class ChatFragment : Fragment(), View.OnClickListener {
 
     private lateinit var chatInput: EditText
+    private lateinit var sendButton: FrameLayout
+    private var communicationListener: CommunicationListener? = null
 
     companion object {
 
@@ -45,22 +48,45 @@ class ChatFragment : Fragment() {
 
         chatInput = mView.findViewById(R.id.chatInput)
         val chatIcon: ImageView = mView.findViewById(R.id.sendIcon)
+        sendButton = mView.findViewById(R.id.sendButton)
 
         chatInput.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable) {
 
-                if (s.isNotEmpty())
+                if (s.isNotEmpty()) {
                     chatIcon.setImageDrawable(activity.getDrawable(R.drawable.ic_send))
-                else
+                    sendButton.isClickable = true
+                }else {
                     chatIcon.setImageDrawable(activity.getDrawable(R.drawable.ic_send_depri))
-
+                    sendButton.isClickable = false
+                }
             }
         })
 
+        sendButton.setOnClickListener(this)
+
     }
 
+    override fun onClick(p0: View?) {
+
+        if (chatInput.text.isNotEmpty()){
+
+            communicationListener?.onCommunication(chatInput.text.toString())
+
+        }
+
+    }
+
+
+    fun setCommunicationListener(communicationListener: CommunicationListener){
+       this.communicationListener = communicationListener
+   }
+
+    interface CommunicationListener{
+        fun onCommunication(message: String)
+    }
 
 
 }
