@@ -1,7 +1,10 @@
 package com.webianks.bluechat
 
 import android.os.Bundle
+import android.os.RecoverySystem
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -21,9 +24,10 @@ class ChatFragment : Fragment(), View.OnClickListener {
     private lateinit var chatInput: EditText
     private lateinit var sendButton: FrameLayout
     private var communicationListener: CommunicationListener? = null
+    private var chatAdapter: ChatAdapter? = null
+    private lateinit var recyclerviewChat: RecyclerView
 
     companion object {
-
         fun newInstance(): ChatFragment {
             val myFragment = ChatFragment()
             val args = Bundle()
@@ -49,6 +53,11 @@ class ChatFragment : Fragment(), View.OnClickListener {
         chatInput = mView.findViewById(R.id.chatInput)
         val chatIcon: ImageView = mView.findViewById(R.id.sendIcon)
         sendButton = mView.findViewById(R.id.sendButton)
+        recyclerviewChat = mView.findViewById(R.id.chatRecyclerView)
+
+        val llm = LinearLayoutManager(activity)
+        llm.reverseLayout = true
+        recyclerviewChat.layoutManager = llm
 
         chatInput.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
@@ -67,14 +76,22 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
         sendButton.setOnClickListener(this)
 
+
+        val messageList = arrayListOf<Message>()
+
+        messageList.add(Message("Valar Morghulis",Constants.MESSAGE_TYPE_SENT))
+        messageList.add(Message("All men must die! ",Constants.MESSAGE_TYPE_RECEIVED))
+        messageList.add(Message("Yup ! :) ",Constants.MESSAGE_TYPE_SENT))
+
+        chatAdapter = ChatAdapter(messageList.reversed(),activity)
+        recyclerviewChat.adapter = chatAdapter
+
     }
 
     override fun onClick(p0: View?) {
 
         if (chatInput.text.isNotEmpty()){
-
             communicationListener?.onCommunication(chatInput.text.toString())
-
         }
 
     }

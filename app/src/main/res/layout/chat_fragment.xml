@@ -1,60 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:clickable="true"
     android:focusable="true">
 
-    <LinearLayout
-        android:id="@+id/messageLayout"
+
+    <RelativeLayout
+        android:id="@+id/chatLayoutContainer"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/message_height_min"
-        android:layout_gravity="bottom"
-        android:weightSum="5"
-        android:focusableInTouchMode="true"
-        android:background="@drawable/rounded_background"
-        android:layout_marginEnd="@dimen/large_label_margin"
-        android:layout_marginStart="@dimen/large_label_margin"
-        android:layout_marginBottom="@dimen/large_label_margin"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
 
-     <EditText
-         android:id="@+id/chatInput"
-         android:layout_width="0dp"
-         android:layout_weight="5"
-         android:layout_marginTop="12dp"
-         android:layout_marginStart="20dp"
-         android:layout_marginEnd="60dp"
-         android:textSize="15sp"
-         android:textColorHint="@color/grey"
-         android:hint="@string/write_something"
-         android:background="@color/transparent"
-         android:layout_height="wrap_content" />
+        <LinearLayout
+            android:id="@+id/messageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/message_height_min"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="@dimen/large_label_margin"
+            android:layout_marginEnd="@dimen/large_label_margin"
+            android:layout_marginStart="@dimen/large_label_margin"
+            android:background="@drawable/rounded_background"
+            android:focusableInTouchMode="true"
+            android:orientation="horizontal"
+            android:weightSum="5">
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/chatInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="60dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="14dp"
+                android:layout_weight="5"
+                android:background="@color/transparent"
+                android:hint="@string/write_something"
+                android:textColorHint="@color/grey"
+                android:textSize="15sp" />
 
-    <FrameLayout
-        android:id="@+id/sendButton"
-        android:layout_width="54dp"
-        android:layout_height="54dp"
-        android:background="@drawable/selectable_background_rounded"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="18dp"
-        android:clickable="false"
-        android:focusable="false"
-        android:layout_marginEnd="@dimen/large_label_margin">
+        </LinearLayout>
 
-      <ImageView
-          android:id="@+id/sendIcon"
-          android:layout_width="32dp"
-          android:layout_height="32dp"
-          android:layout_gravity="center"
-          android:src="@drawable/ic_send_depri"/>
+        <FrameLayout
+            android:id="@+id/sendButton"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="18dp"
+            android:layout_marginEnd="@dimen/large_label_margin"
+            android:background="@drawable/selectable_background_rounded"
+            android:clickable="false"
+            android:focusable="false">
 
-    </FrameLayout>
+            <ImageView
+                android:id="@+id/sendIcon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_send_depri" />
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/chatRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/chatLayoutContainer"
+        android:layout_marginBottom="16dp"
+        />
 
 </RelativeLayout>

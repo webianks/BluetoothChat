@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 
 /**
  * Created by ramankit on 25/7/17.
@@ -20,13 +21,12 @@ class ChatAdapter(val chatData: List<Message>, val context: Context) : RecyclerV
         when(holder?.itemViewType){
 
             SENT -> {
-
                 val holder: SentHolder = holder as SentHolder
-
+                holder.sentTV.text = chatData[position].message
             }
             RECEIVED -> {
-
                 val holder: ReceivedHolder = holder as ReceivedHolder
+                holder.receiviedTV.text = chatData[position].message
             }
 
         }
@@ -65,11 +65,11 @@ class ChatAdapter(val chatData: List<Message>, val context: Context) : RecyclerV
     }
 
     inner class SentHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-
+        var sentTV = itemView.findViewById<TextView>(R.id.sentMessage)
     }
 
     inner class ReceivedHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
+        var receiviedTV = itemView.findViewById<TextView>(R.id.receivedMessage)
     }
 
 }
