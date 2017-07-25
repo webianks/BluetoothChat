@@ -7,4 +7,9 @@
     <dimen name="large_label_margin">20dp</dimen>
     <dimen name="large_dash_margin">35dp</dimen>
     <dimen name="message_height_min">48dp</dimen>
+    <dimen name="message_bubble_min_height">32dp</dimen>
+    <dimen name="chat_bubble_left_margin">16dp</dimen>
+    <dimen name="chat_bubble_right_margin">32dp</dimen>
+    <dimen name="chat_message_padding">16dp</dimen>
+    <dimen name="chat_bubble_top_margin">16dp</dimen>
 </resources>

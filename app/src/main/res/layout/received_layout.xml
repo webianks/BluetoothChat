@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="start"
+    android:minHeight="@dimen/message_bubble_min_height"
+    android:layout_marginStart="@dimen/chat_bubble_left_margin"
+    android:layout_marginEnd="@dimen/chat_bubble_right_margin"
+    android:layout_marginTop="@dimen/chat_bubble_top_margin"
+    android:background="@drawable/rounded_chat_received_background"
+    >
+
+    <TextView
+        android:id="@+id/receivedMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/chat_message_padding"
+        android:textColor="@color/white"
+        android:text="@string/test_message"
+        />
+
+</FrameLayout>

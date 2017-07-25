@@ -14,6 +14,8 @@ class Constants{
         val MESSAGE_WRITE = 3
         val MESSAGE_DEVICE_NAME = 4
         val MESSAGE_TOAST = 5
+        var MESSAGE_TYPE_SENT = 1
+        var MESSAGE_TYPE_RECEIVED = 2
 
         // Key names received from the BluetoothChatService Handler
         val DEVICE_NAME = "device_name"

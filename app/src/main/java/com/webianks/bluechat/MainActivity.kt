@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
     private lateinit var headerLabelContainer: LinearLayout
     private lateinit var status: TextView
     private lateinit var connectionDot: ImageView
+    private lateinit var  mConnectedDeviceName: String
 
     private var mChatService: BluetoothChatService? = null
 
@@ -332,8 +333,6 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
     private val mHandler = @SuppressLint("HandlerLeak")
     object : Handler() {
         override fun handleMessage(msg: Message) {
-
-            var mConnectedDeviceName = " "
 
             when (msg.what) {
 
