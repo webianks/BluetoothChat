@@ -4,7 +4,7 @@
     android:shape="oval">
 
     <stroke android:color="@color/colorAccent"
-        android:width="4dp"
+        android:width="2dp"
         />
 
     <solid

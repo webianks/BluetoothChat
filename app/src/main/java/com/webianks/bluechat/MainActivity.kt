@@ -53,12 +53,6 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
-
-        val actionbar: ActionBar? = supportActionBar
-        actionbar?.title = getString(R.string.nothing)
-
         val toolbarTitle = findViewById<TextView>(R.id.toolbarTitle)
 
         val typeFace = Typeface.createFromAsset(assets, "fonts/product_sans.ttf")
