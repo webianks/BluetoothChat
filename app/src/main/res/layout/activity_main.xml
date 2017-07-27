@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.webianks.bluechat.MainActivity">
+        android:layout_height="match_parent">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appBar"
@@ -32,19 +30,19 @@
                     android:id="@+id/toolbarTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/app_name"
-                    android:layout_centerHorizontal="true"
                     android:textColor="@color/colorPrimaryText"
                     android:textSize="@dimen/titleTextSize"
                     android:textStyle="bold" />
 
                 <LinearLayout
-                    android:layout_below="@id/toolbarTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_below="@id/toolbarTitle"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginTop="4dp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -58,91 +56,104 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
-
                 </LinearLayout>
 
             </RelativeLayout>
 
         </android.support.design.widget.AppBarLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/mainScreen"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/appBar">
+            android:layout_below="@id/appBar"
+            android:orientation="vertical"
+            android:weightSum="5">
 
-            <LinearLayout
-                android:id="@+id/pairedContainer"
+            <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="0dp"
+                android:layout_weight="4.2">
 
-                <TextView
-                    android:id="@+id/headerLabelPaired"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/paired_devices"
-                    android:textColor="@color/colorPrimaryText"
-                    android:textStyle="bold"
-                    android:visibility="gone" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerViewPaired"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                    android:layout_height="wrap_content">
 
-            </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/pairedContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/headerLabelPaired"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="32dp"
+                            android:layout_marginTop="16dp"
+                            android:text="@string/paired_devices"
+                            android:textColor="@color/colorPrimaryText"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/recyclerViewPaired"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/headerLabelContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/pairedContainer"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/headerLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="32dp"
+                            android:layout_marginTop="16dp"
+                            android:text="@string/searching"
+                            android:textColor="@color/colorPrimaryText"
+                            android:textStyle="bold" />
+
+                        <ProgressBar
+                            android:id="@+id/progressBar"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginTop="16dp"
+                            android:visibility="gone" />
+
+                    </LinearLayout>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/headerLabelContainer"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                </RelativeLayout>
+            </android.support.v4.widget.NestedScrollView>
 
             <LinearLayout
-                android:id="@+id/headerLabelContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/pairedContainer"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/headerLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/searching"
-                    android:textColor="@color/colorPrimaryText"
-                    android:textStyle="bold" />
-
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_marginTop="16dp"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/headerLabelContainer"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
+                android:layout_height="0dp"
+                android:layout_weight="0.8"
                 android:weightSum="2">
 
                 <Button
                     android:id="@+id/search_devices"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/buttonHeight"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="32dp"
                     android:layout_weight="1"
@@ -156,7 +167,8 @@
                     android:id="@+id/make_visible"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/buttonHeight"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="32dp"
                     android:layout_weight="1"
                     android:background="@drawable/selectable_background"
@@ -167,9 +179,7 @@
 
             </LinearLayout>
 
-
-        </RelativeLayout>
-
+        </LinearLayout>
 
     </RelativeLayout>
 

@@ -77,6 +77,9 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerViewPaired.layoutManager = LinearLayoutManager(this)
 
+        recyclerView.isNestedScrollingEnabled = false
+        recyclerViewPaired.isNestedScrollingEnabled = false
+
         findViewById<Button>(R.id.search_devices).setOnClickListener {
             findDevices()
         }
