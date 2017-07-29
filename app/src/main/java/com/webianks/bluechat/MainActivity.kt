@@ -251,6 +251,26 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
             //Bluetooth is now connected.
             status.text = getString(R.string.not_connected)
 
+            // Get a set of currently paired devices
+            val pairedDevices = mBtAdapter?.bondedDevices
+            val mPairedDeviceList = arrayListOf<DeviceData>()
+
+            // If there are paired devices, add each one to the ArrayAdapter
+            if (pairedDevices?.size ?: 0 > 0) {
+                // There are paired devices. Get the name and address of each paired device.
+                for (device in pairedDevices!!) {
+                    val deviceName = device.name
+                    val deviceHardwareAddress = device.address // MAC address
+                    mPairedDeviceList.add(DeviceData(deviceName,deviceHardwareAddress))
+                }
+
+                val devicesAdapter = DevicesRecyclerViewAdapter(context = this, mDeviceList = mPairedDeviceList)
+                recyclerViewPaired.adapter = devicesAdapter
+                devicesAdapter.setItemClickListener(this)
+                headerLabelPaired.visibility = View.VISIBLE
+
+            }
+
         }
         //label.setText("Bluetooth is now enabled.")
     }
