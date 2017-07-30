@@ -255,6 +255,8 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
             val pairedDevices = mBtAdapter?.bondedDevices
             val mPairedDeviceList = arrayListOf<DeviceData>()
 
+            mPairedDeviceList.clear()
+
             // If there are paired devices, add each one to the ArrayAdapter
             if (pairedDevices?.size ?: 0 > 0) {
                 // There are paired devices. Get the name and address of each paired device.
