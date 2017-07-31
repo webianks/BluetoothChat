@@ -297,6 +297,7 @@ class BluetoothChatService(context: Context, handler: Handler){
         }
 
         override fun run() {
+
             Log.d(TAG, "Socket Type: " + mSocketType +
                     "BEGIN mAcceptThread" + this)
             name = "AcceptThread" + mSocketType
