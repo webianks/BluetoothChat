@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
     private lateinit var progressBar: ProgressBar
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerViewPaired: RecyclerView
-    private val mDeviceList = arrayListOf<DeviceData>()
+        private val mDeviceList = arrayListOf<DeviceData>()
     private lateinit var devicesAdapter: DevicesRecyclerViewAdapter
     private var mBtAdapter: BluetoothAdapter? = null
     private val PERMISSION_REQUEST_LOCATION = 123
@@ -228,6 +228,10 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
 
                 val deviceData = DeviceData(deviceName, deviceHardwareAddress)
                 mDeviceList.add(deviceData)
+
+                val setList = HashSet<DeviceData>(mDeviceList)
+                mDeviceList.clear()
+                mDeviceList.addAll(setList)
 
                 devicesAdapter.notifyDataSetChanged()
             }
