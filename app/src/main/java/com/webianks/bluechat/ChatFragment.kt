@@ -41,7 +41,6 @@ class ChatFragment : Fragment(), View.OnClickListener {
         super.onCreate(savedInstanceState)
     }
 
-
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val mView: View  = LayoutInflater.from(activity).inflate(R.layout.chat_fragment, container, false)
@@ -106,8 +105,8 @@ class ChatFragment : Fragment(), View.OnClickListener {
         fun onCommunication(message: String)
     }
 
-    fun communicate(message: String, type: Int){
-        messageList.add(Message(message,type))
+    fun communicate(message: Message){
+        messageList.add(message)
         chatAdapter = ChatAdapter(messageList.reversed(),activity)
         recyclerviewChat.adapter = chatAdapter
         recyclerviewChat.scrollToPosition(0)

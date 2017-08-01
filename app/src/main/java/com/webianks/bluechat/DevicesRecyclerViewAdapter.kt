@@ -35,7 +35,7 @@ class DevicesRecyclerViewAdapter(val mDeviceList: List<DeviceData>, val context:
         var label: TextView? = itemView?.findViewById(R.id.largeLabel)
 
         init {
-            label?.setOnClickListener{
+            itemView?.setOnClickListener{
                 listener?.itemClicked(mDeviceList[adapterPosition])
             }
         }

@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Created by ramankit on 25/7/17.
@@ -15,6 +18,7 @@ class ChatAdapter(val chatData: List<Message>, val context: Context) : RecyclerV
 
     val SENT = 0
     val RECEIVED = 1
+    var df: DateFormat = SimpleDateFormat("hh:mm a",Locale.getDefault())
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
 
@@ -23,10 +27,18 @@ class ChatAdapter(val chatData: List<Message>, val context: Context) : RecyclerV
             SENT -> {
                 val holder: SentHolder = holder as SentHolder
                 holder.sentTV.text = chatData[position].message
+                val timeMilliSeconds = chatData[position].time
+                val resultdate = Date(timeMilliSeconds)
+
+                holder.timeStamp.text = df.format(resultdate)
+
             }
             RECEIVED -> {
                 val holder: ReceivedHolder = holder as ReceivedHolder
-                holder.receiviedTV.text = chatData[position].message
+                holder.receivedTV.text = chatData[position].message
+                val timeMilliSeconds = chatData[position].time
+                val resultdate = Date(timeMilliSeconds)
+                holder.timeStamp.text = df.format(resultdate)
             }
 
         }
@@ -66,10 +78,12 @@ class ChatAdapter(val chatData: List<Message>, val context: Context) : RecyclerV
 
     inner class SentHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         var sentTV = itemView.findViewById<TextView>(R.id.sentMessage)
+        var timeStamp = itemView.findViewById<TextView>(R.id.timeStamp)
     }
 
     inner class ReceivedHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var receiviedTV = itemView.findViewById<TextView>(R.id.receivedMessage)
+        var receivedTV = itemView.findViewById<TextView>(R.id.receivedMessage)
+        var timeStamp = itemView.findViewById<TextView>(R.id.timeStamp)
     }
 
 }

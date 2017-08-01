@@ -16,24 +16,21 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.support.design.widget.Snackbar
-import android.support.v7.app.ActionBar
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.*
 
 class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickListener, ChatFragment.CommunicationListener {
-
 
     private val REQUEST_ENABLE_BT = 123
     private val TAG = javaClass.simpleName
     private lateinit var progressBar: ProgressBar
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerViewPaired: RecyclerView
-    private val mDeviceList = arrayListOf<DeviceData>()
+        private val mDeviceList = arrayListOf<DeviceData>()
     private lateinit var devicesAdapter: DevicesRecyclerViewAdapter
     private var mBtAdapter: BluetoothAdapter? = null
     private val PERMISSION_REQUEST_LOCATION = 123
@@ -232,6 +229,10 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
                 val deviceData = DeviceData(deviceName, deviceHardwareAddress)
                 mDeviceList.add(deviceData)
 
+                val setList = HashSet<DeviceData>(mDeviceList)
+                mDeviceList.clear()
+                mDeviceList.addAll(setList)
+
                 devicesAdapter.notifyDataSetChanged()
             }
 
@@ -388,16 +389,18 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
                     val writeMessage = String(writeBuf)
                     //Toast.makeText(this@MainActivity,"Me: $writeMessage",Toast.LENGTH_SHORT).show()
                     //mConversationArrayAdapter.add("Me:  " + writeMessage)
-                    chatFragment.communicate(writeMessage,Constants.MESSAGE_TYPE_SENT)
+                    val milliSecondsTime = System.currentTimeMillis()
+                    chatFragment.communicate(com.webianks.bluechat.Message(writeMessage,milliSecondsTime,Constants.MESSAGE_TYPE_SENT))
 
                 }
                 Constants.MESSAGE_READ -> {
                     val readBuf = msg.obj as ByteArray
                     // construct a string from the valid bytes in the buffer
                     val readMessage = String(readBuf, 0, msg.arg1)
+                    val milliSecondsTime = System.currentTimeMillis()
                     //Toast.makeText(this@MainActivity,"$mConnectedDeviceName : $readMessage",Toast.LENGTH_SHORT).show()
                     //mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage)
-                    chatFragment.communicate(readMessage,Constants.MESSAGE_TYPE_RECEIVED)
+                    chatFragment.communicate(com.webianks.bluechat.Message(readMessage,milliSecondsTime,Constants.MESSAGE_TYPE_RECEIVED))
                 }
                 Constants.MESSAGE_DEVICE_NAME -> {
                     // save the connected device's name

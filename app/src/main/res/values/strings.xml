@@ -19,4 +19,5 @@
     <string name="paired_devices">Paired Devices</string>
     <string name="write_something">Write something..</string>
     <string name="test_message">Test message ?</string>
+    <string name="test_stamp">15 Jun, 2017, 4:25 A.M.</string>
 </resources>
