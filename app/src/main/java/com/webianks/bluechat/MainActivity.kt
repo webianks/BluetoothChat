@@ -23,14 +23,15 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.*
 
-class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickListener, ChatFragment.CommunicationListener {
+class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickListener,
+        ChatFragment.CommunicationListener {
 
     private val REQUEST_ENABLE_BT = 123
     private val TAG = javaClass.simpleName
     private lateinit var progressBar: ProgressBar
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerViewPaired: RecyclerView
-        private val mDeviceList = arrayListOf<DeviceData>()
+    private val mDeviceList = arrayListOf<DeviceData>()
     private lateinit var devicesAdapter: DevicesRecyclerViewAdapter
     private var mBtAdapter: BluetoothAdapter? = null
     private val PERMISSION_REQUEST_LOCATION = 123
@@ -454,7 +455,6 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
     override fun onCommunication(message: String) {
            sendMessage(message)
     }
-
 
     override fun onBackPressed() {
         if (supportFragmentManager.backStackEntryCount == 0)
