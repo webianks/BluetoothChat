@@ -13,6 +13,7 @@ import android.text.Editable
 import android.util.Log
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.Toast
 
 
 /**
@@ -107,9 +108,11 @@ class ChatFragment : Fragment(), View.OnClickListener {
 
     fun communicate(message: Message){
         messageList.add(message)
-        chatAdapter = ChatAdapter(messageList.reversed(),activity)
-        recyclerviewChat.adapter = chatAdapter
-        recyclerviewChat.scrollToPosition(0)
+        if(activity != null) {
+            chatAdapter = ChatAdapter(messageList.reversed(), activity)
+            recyclerviewChat.adapter = chatAdapter
+            recyclerviewChat.scrollToPosition(0)
+        }
     }
 
 
