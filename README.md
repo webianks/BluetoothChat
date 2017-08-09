@@ -1,5 +1,4 @@
 # BlueChat
 Bluetooth chat app written purely in Kotlin.
 
-# Coming Soon
-Several bug fixes, Feature fine tuning and Detailed Readme with APK is on its way.
+<img src="https://github.com/webianks/BlueChat/blob/master/screens/screen_one.png" align="left" height="700" width="400" >
