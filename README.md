@@ -7,4 +7,4 @@ Bluetooth chat app written purely in Kotlin.
 
 # Download
 
-<a href="https://github.com/webianks/BlueChat/raw/master/screens/app-debug.apk"><img src="https://github.com/webianks/HatkeMessenger/blob/master/screens/download.png" height="74" width="50"></a>
+<a href="https://github.com/webianks/BlueChat/raw/master/screens/app-debug.apk"><img src="https://github.com/webianks/BlueChat/blob/master/screens/download.png" height="100" width="200"></a>
