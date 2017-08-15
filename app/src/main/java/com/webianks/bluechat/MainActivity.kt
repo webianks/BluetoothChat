@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
     private lateinit var status: TextView
     private lateinit var connectionDot: ImageView
     private lateinit var  mConnectedDeviceName: String
+    private var connected: Boolean = false
 
     private var mChatService: BluetoothChatService? = null
     private lateinit var chatFragment: ChatFragment
@@ -340,6 +341,10 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
                 mChatService?.start()
             }
         }
+
+        if(connected)
+            showChatFragment()
+
     }
 
     override fun onDestroy() {
@@ -367,19 +372,20 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
                             connectionDot.setImageDrawable(getDrawable(R.drawable.ic_circle_connected))
                             Snackbar.make(findViewById(R.id.mainScreen),"Connected to " + mConnectedDeviceName,Snackbar.LENGTH_SHORT).show()
                             //mConversationArrayAdapter.clear()
+                            connected = true
                         }
 
                         BluetoothChatService.STATE_CONNECTING -> {
                             status.text = getString(R.string.connecting)
                             connectionDot.setImageDrawable(getDrawable(R.drawable.ic_circle_connecting))
-
+                            connected = false
                         }
 
                         BluetoothChatService.STATE_LISTEN, BluetoothChatService.STATE_NONE -> {
                             status.text = getString(R.string.not_connected)
                             connectionDot.setImageDrawable(getDrawable(R.drawable.ic_circle_red))
                             Snackbar.make(findViewById(R.id.mainScreen),getString(R.string.not_connected),Snackbar.LENGTH_SHORT).show()
-
+                            connected = false
                         }
                     }
                 }
@@ -409,12 +415,14 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
                     status.text = getString(R.string.connected_to) + " " +mConnectedDeviceName
                     connectionDot.setImageDrawable(getDrawable(R.drawable.ic_circle_connected))
                     Snackbar.make(findViewById(R.id.mainScreen),"Connected to " + mConnectedDeviceName,Snackbar.LENGTH_SHORT).show()
+                    connected = true
                     showChatFragment()
                 }
                 Constants.MESSAGE_TOAST -> {
                     status.text = getString(R.string.not_connected)
                     connectionDot.setImageDrawable(getDrawable(R.drawable.ic_circle_red))
                     Snackbar.make(findViewById(R.id.mainScreen),msg.data.getString(Constants.TOAST),Snackbar.LENGTH_SHORT).show()
+                    connected = false
                   }
             }
         }
@@ -443,13 +451,15 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
 
     private fun showChatFragment() {
 
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        chatFragment = ChatFragment.newInstance()
-        chatFragment.setCommunicationListener(this)
-        fragmentTransaction.replace(R.id.mainScreen, chatFragment, "ChatFragment")
-        fragmentTransaction.addToBackStack("ChatFragment")
-        fragmentTransaction.commit()
+        if(!isFinishing) {
+            val fragmentManager = supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            chatFragment = ChatFragment.newInstance()
+            chatFragment.setCommunicationListener(this)
+            fragmentTransaction.replace(R.id.mainScreen, chatFragment, "ChatFragment")
+            fragmentTransaction.addToBackStack("ChatFragment")
+            fragmentTransaction.commit()
+        }
     }
 
     override fun onCommunication(message: String) {
@@ -462,4 +472,5 @@ class MainActivity : AppCompatActivity(), DevicesRecyclerViewAdapter.ItemClickLi
         else
             supportFragmentManager.popBackStack()
     }
+
 }
