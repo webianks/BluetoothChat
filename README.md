@@ -1,3 +1,5 @@
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-BlueChat-blue.svg?style=flat)](https://android-arsenal.com/details/3/6078)
+
 # BlueChat
 Bluetooth chat app written purely in Kotlin.
 
